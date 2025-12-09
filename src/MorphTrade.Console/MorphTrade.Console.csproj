@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Title>Sample Scaffolding Algo Trade</Title>
+        <Authors>
+            saapo-ka-baadshah;;
+        </Authors>
+        <Description>Provisions a baseline console application template</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting"/>
+        <PackageReference Include="Microsoft.Extensions.Logging"/>
+        <PackageReference Include="SKB.Core.EditorConfig">
+            <IncludeAssets>Build</IncludeAssets>
+            <PrivateAssets>All</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="skb.core.licenseconfig">
+            <PrivateAssets>All</PrivateAssets>
+            <IncludeAssets>Build</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="appsettings*.json" Pack="true">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MorphTrade.Domain.Flows\MorphTrade.Domain.Flows.csproj" />
+      <ProjectReference Include="..\MorphTrade.Domain.Ingestion\MorphTrade.Domain.Ingestion.csproj" />
+    </ItemGroup>
+
+</Project>

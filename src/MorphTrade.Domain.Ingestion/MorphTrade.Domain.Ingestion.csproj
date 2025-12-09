@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MorphTrade.Abstractions\MorphTrade.Abstractions.csproj" />
+      <ProjectReference Include="..\MorphTrade.Domain.Flows\MorphTrade.Domain.Flows.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+		<PackageReference Include="fyers-api-v3" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" />
+		<PackageReference Include="Microsoft.Extensions.Options" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" />
+    </ItemGroup>
+
+</Project>

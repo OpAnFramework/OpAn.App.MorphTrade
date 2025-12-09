@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MorphTrade.Console", "src\MorphTrade.Console\MorphTrade.Console.csproj", "{97642635-10A3-448D-9A74-885ABEB5DC95}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{A43F7C93-7CC6-4FF0-9975-D64023B1FC0D}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		Directory.Packages.props = Directory.Packages.props
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MorphTrade.Abstractions", "src\MorphTrade.Abstractions\MorphTrade.Abstractions.csproj", "{BB3A1EEB-F1DF-4FDD-949F-AA1E263B6FD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MorphTrade.Domain.Ingestion", "src\MorphTrade.Domain.Ingestion\MorphTrade.Domain.Ingestion.csproj", "{40335E94-AC6A-4E43-9F65-2C1693BB1935}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MorphTrade.Domain.Flows", "src\MorphTrade.Domain.Flows\MorphTrade.Domain.Flows.csproj", "{D24B054B-D444-4D7A-98BF-AC890C020869}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndicatorDesign", "workspace\IndicatorDesign\IndicatorDesign.csproj", "{FA94611B-F655-4922-B8BA-2449B7511249}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{97642635-10A3-448D-9A74-885ABEB5DC95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97642635-10A3-448D-9A74-885ABEB5DC95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97642635-10A3-448D-9A74-885ABEB5DC95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97642635-10A3-448D-9A74-885ABEB5DC95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB3A1EEB-F1DF-4FDD-949F-AA1E263B6FD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB3A1EEB-F1DF-4FDD-949F-AA1E263B6FD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB3A1EEB-F1DF-4FDD-949F-AA1E263B6FD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB3A1EEB-F1DF-4FDD-949F-AA1E263B6FD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40335E94-AC6A-4E43-9F65-2C1693BB1935}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40335E94-AC6A-4E43-9F65-2C1693BB1935}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40335E94-AC6A-4E43-9F65-2C1693BB1935}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40335E94-AC6A-4E43-9F65-2C1693BB1935}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D24B054B-D444-4D7A-98BF-AC890C020869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D24B054B-D444-4D7A-98BF-AC890C020869}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D24B054B-D444-4D7A-98BF-AC890C020869}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D24B054B-D444-4D7A-98BF-AC890C020869}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA94611B-F655-4922-B8BA-2449B7511249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA94611B-F655-4922-B8BA-2449B7511249}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA94611B-F655-4922-B8BA-2449B7511249}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA94611B-F655-4922-B8BA-2449B7511249}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

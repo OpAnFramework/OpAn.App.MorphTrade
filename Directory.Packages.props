@@ -1,0 +1,18 @@
+﻿<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageVersionOverrideEnabled>false</CentralPackageVersionOverrideEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="fyers-api-v3" Version="1.0.6" />
+    <PackageVersion Include="JetBrains.Annotations" Version="2024.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="9.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
+    <PackageVersion Include="SKB.Core.EditorConfig" Version="9.0.2" />
+    <PackageVersion Include="skb.core.licenseconfig" Version="9.0.2" />
+    <PackageVersion Include="Skender.Stock.Indicators" Version="2.7.0" />
+  </ItemGroup>
+</Project>
