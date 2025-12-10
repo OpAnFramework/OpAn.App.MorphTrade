@@ -35,6 +35,7 @@
     <ItemGroup>
       <ProjectReference Include="..\MorphTrade.Domain.Flows\MorphTrade.Domain.Flows.csproj" />
       <ProjectReference Include="..\MorphTrade.Domain.Ingestion\MorphTrade.Domain.Ingestion.csproj" />
+      <ProjectReference Include="..\MorphTrade.Infrastructure.Persistence\MorphTrade.Infrastructure.Persistence.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,8 +1,12 @@
 ﻿using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpAn.App.MorphTrade.Console.Extensions;
 using OpAn.App.MorphTrade.Domain.Ingestion.Extensions;
+using OpAn.App.MorphTrade.Infrastructure.Persistence;
+using OpAn.App.MorphTrade.Infrastructure.Persistence.Extension;
 
 namespace OpAn.App.MorphTrade.Console;
 
@@ -44,9 +48,20 @@ internal class Program
 	        builder.AddAlpacaExtensions();
         }
 
-        // Run the hosted application
+	    // Add Persistent database
+	    builder.Services
+		    .AddPersistenceDb(builder.Configuration);
 
+        // Run the hosted application
         var app = builder.Build();
+
+        // Perform DB migrations
+        using (var scope = app.Services.CreateScope())
+        {
+	        var bankingDbContext = scope.ServiceProvider.GetRequiredService<BankDbContext>();
+
+	        bankingDbContext.Database.Migrate();
+        }
 
 	    app.Run();
     }

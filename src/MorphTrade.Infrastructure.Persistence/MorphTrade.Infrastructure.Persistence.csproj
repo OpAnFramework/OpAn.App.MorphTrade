@@ -13,6 +13,12 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MorphTrade.Domain.Finance.Bank\MorphTrade.Domain.Finance.Bank.csproj" />
+      <ProjectReference Include="..\MorphTrade.Domain.Finance\MorphTrade.Domain.Finance.csproj" />
     </ItemGroup>
 
 </Project>
