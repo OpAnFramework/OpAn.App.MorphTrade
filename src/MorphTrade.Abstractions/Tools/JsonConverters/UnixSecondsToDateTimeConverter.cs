@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace SKB.Workspace.IndicatorDesign;
+namespace OpAn.App.MorphTrade.Abstractions.Tools.JsonConverters;
 
 /// <summary>
 /// Converts Unix seconds to datetime.

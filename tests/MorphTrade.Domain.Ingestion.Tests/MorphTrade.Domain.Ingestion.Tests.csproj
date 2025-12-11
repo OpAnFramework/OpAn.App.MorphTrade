@@ -12,12 +12,18 @@
         <TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
     </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="MSTest.Analyzers"/>
-		<PackageReference Include="MSTest.TestAdapter"/>
-		<PackageReference Include="MSTest.TestFramework"/>
-		<PackageReference Include="Microsoft.NET.Test.Sdk"/>
-		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage"/>
-		<PackageReference Include="Microsoft.Testing.Extensions.TrxReport"/>
-	</ItemGroup>
+    <ItemGroup>
+      <None Update="test_data.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\MorphTrade.Abstractions\MorphTrade.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Moq" />
+    </ItemGroup>
+
 </Project>

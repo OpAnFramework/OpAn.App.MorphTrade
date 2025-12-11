@@ -5,9 +5,12 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AThrowHelper_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FLibrary_003FApplication_0020Support_003FJetBrains_003FRider2025_002E1_003Fresharper_002Dhost_003FSourcesCache_003F4743f513c7ddc8411223a46f0ca426ed929391acebcff993721dff2f0c6b34_003FThrowHelper_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AThrowHelper_002ESerialization_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FLibrary_003FApplication_0020Support_003FJetBrains_003FRider2025_002E1_003Fresharper_002Dhost_003FSourcesCache_003Fd4add5c92cbab0a855876709b0a3af1a731faf96e8e134ee7787a2c262028_003FThrowHelper_002ESerialization_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=55fe14ce_002D69b2_002D4dc2_002D9288_002Db8559b74b865/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestPersistentAccountStorage" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;TestAncestor&gt;
-    &lt;TestId&gt;MSTest::48DB042E-CAD6-4007-A5F8-CF07B34F9FAD::net9.0::OpAn.App.MorphTrade.Domain.Finance.Bank.Tests.TestPersistentAccountStorage&lt;/TestId&gt;
-    &lt;TestId&gt;MSTest::48DB042E-CAD6-4007-A5F8-CF07B34F9FAD::net9.0::OpAn.App.MorphTrade.Domain.Finance.Bank.Tests.TestPersistentAccountDatabase&lt;/TestId&gt;
-  &lt;/TestAncestor&gt;
+  &lt;Or&gt;
+    &lt;TestAncestor&gt;
+      &lt;TestId&gt;MSTest::48DB042E-CAD6-4007-A5F8-CF07B34F9FAD::net9.0::OpAn.App.MorphTrade.Domain.Finance.Bank.Tests.TestPersistentAccountStorage&lt;/TestId&gt;
+      &lt;TestId&gt;MSTest::48DB042E-CAD6-4007-A5F8-CF07B34F9FAD::net9.0::OpAn.App.MorphTrade.Domain.Finance.Bank.Tests.TestPersistentAccountDatabase&lt;/TestId&gt;
+    &lt;/TestAncestor&gt;
+    &lt;Project Location="/Users/ameymahadik/REPOS/OpenSource/OpAn/OpAn.MorphTrade/MorphTrade/tests/MorphTrade.Domain.Ingestion.Tests" Presentation="&amp;lt;MorphTrade.Domain.Ingestion.Tests&amp;gt;" /&gt;
+  &lt;/Or&gt;
 &lt;/SessionState&gt;</s:String>
 	</wpf:ResourceDictionary>
