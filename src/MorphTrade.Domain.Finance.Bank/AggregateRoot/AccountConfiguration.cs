@@ -19,5 +19,6 @@ public class AccountConfiguration: IEntityTypeConfiguration<Account>
 			.HasForeignKey("AccountId")
 			.IsRequired()
 			.OnDelete(DeleteBehavior.Cascade);
+		builder.Property(a => a.Currency).IsRequired().HasConversion<string>();
 	}
 }

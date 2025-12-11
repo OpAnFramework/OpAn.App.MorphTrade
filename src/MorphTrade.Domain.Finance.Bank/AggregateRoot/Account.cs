@@ -18,12 +18,17 @@ public class Account: Entity, IAccountOperations
 	public required string AccountName { get; init; }
 
 	/// <summary>
+	/// Specifies currency associated with the account.
+	/// </summary>
+	public required CurrencyType Currency { get; init; }
+
+	/// <summary>
 	/// Funds associated with the account.
 	/// </summary>
 	[PublicAPI]
 	public required double Funds { get; set; }
 
-	private readonly List<Transaction> _transactions = new List<Transaction>();
+	private readonly List<Transaction> _transactions = new ();
 
 	/// <summary>
 	/// Publicly accessible Transactions list.
@@ -34,28 +39,21 @@ public class Account: Entity, IAccountOperations
 	public double GetBalance() => Funds;
 
 	/// <inheritdoc />
+	public Transaction RecordTransaction(Transaction transaction)
+	{
+		_transactions.Add(transaction);
+		return transaction;
+	}
+
+	/// <inheritdoc />
 	public Transaction Credit(double amount, string description)
 	{
 		if (amount <= 0)
 			throw new ArgumentException("Deposit amount must be positive.");
 
-		// 1. Update the Aggregate Root's state (Balance)
+		// Update the Aggregate Root's state (Balance)
 		Funds += amount;
-
-		// 2. Create and add the new entity (Transaction) internally
-		var transaction = new Transaction()
-		{
-			Id = Guid.NewGuid().ToString(),
-			AccountId = Id,
-			Amount = amount,
-			Reference = description,
-			Timestamp = DateTime.Now,
-			TransactionType = TransactionType.Deposit
-		};
-		_transactions.Add(transaction);
-
-		// 3. (Optional) Return the transaction, or simply return void/true
-		return transaction;
+		return this.CreateTransaction(amount, TransactionType.Deposit, description);
 	}
 
 	/// <inheritdoc />
@@ -69,19 +67,6 @@ public class Account: Entity, IAccountOperations
 		// 1. Update the Aggregate Root's state (Balance)
 		Funds -= amount;
 
-		// 2. Create and add the new entity (Transaction) internally
-		var transaction = new Transaction()
-		{
-			Id = Guid.NewGuid().ToString(),
-			AccountId = Id,
-			Amount = amount,
-			Reference = description,
-			Timestamp = DateTime.Now,
-			TransactionType = TransactionType.Withdraw
-		};
-		_transactions.Add(transaction);
-
-		// 3. (Optional) Return the transaction, or simply return void/true
-		return transaction;
+		return this.CreateTransaction(amount, TransactionType.Withdraw, description);
 	}
 }

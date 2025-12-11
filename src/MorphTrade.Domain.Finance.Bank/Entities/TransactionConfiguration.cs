@@ -17,5 +17,6 @@ public class TransactionConfiguration: IEntityTypeConfiguration<Transaction>
 		builder.Property(p => p.Amount).IsRequired();
 		builder.Property(p => p.AccountId).IsRequired().HasMaxLength(100);
 		builder.Property(p => p.Reference).HasMaxLength(100);
+		builder.Property(p => p.Currency).IsRequired().HasConversion<string>();
 	}
 }

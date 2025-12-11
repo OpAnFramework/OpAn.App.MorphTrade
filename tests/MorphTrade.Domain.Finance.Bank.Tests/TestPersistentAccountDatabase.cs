@@ -1,9 +1,8 @@
-using System.Reflection;
 using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpAn.App.MorphTrade.Domain.Finance.Bank.AggregateRoot;
+using OpAn.App.MorphTrade.Domain.Finance.Bank.Enums;
 using OpAn.App.MorphTrade.Domain.Finance.Bank.Repositories;
 using OpAn.App.MorphTrade.Infrastructure.Persistence.Extension;
 
@@ -53,20 +52,16 @@ public class TestPersistentAccountDatabase
 		ConfigurationManager configuration = new ConfigurationManager();
 		configuration.Sources.Clear();
 		configuration.AddJsonFile(Path.Combine(_tempPath!, _configName));
-		List<Assembly> assemblies =
-		[
-			typeof(IBankingDomainAssemblyMarker).Assembly
-		];
 
 		ServiceCollection servicesContainer = new ServiceCollection();
 		servicesContainer.AddLogging();
 		servicesContainer
-			.AddPersistenceDb(configuration, assemblies)
+			.AddPersistenceDb(configuration)
 			.AddBankingDomain();
 
 		var services = servicesContainer.BuildServiceProvider();
-		await services.GetRequiredService<BankDbContext>()!
-			.Database.MigrateAsync();
+		await services.GetRequiredService<BankDbContext>()
+			.Database.EnsureCreatedAsync();
 
 		IAccountRepository? accountRepository = services.GetService<IAccountRepository>();
 
@@ -77,7 +72,8 @@ public class TestPersistentAccountDatabase
 		{
 			Id = trackingId,
 			AccountName = $"AccountName_{trackingId}",
-			Funds = 50000
+			Funds = 50000,
+			Currency = CurrencyType.Euro
 		};
 
 		await accountRepository.Add(testAccount);
@@ -85,6 +81,19 @@ public class TestPersistentAccountDatabase
 		Account? retrievedAccount = await accountRepository.GetByIdAsync(trackingId);
 		Assert.IsNotNull(retrievedAccount);
 		Assert.AreEqual(trackingId, retrievedAccount.Id);
+
+		// Perform transactions and check if transactions are updated.
+		retrievedAccount.Credit(2345, "TestTransaction");
+		await accountRepository.Update(retrievedAccount);
+		var richRetrievedAccount = await accountRepository.GetByIdAsync(trackingId);
+		Assert.IsNotNull(richRetrievedAccount);
+		Assert.AreEqual(52345, richRetrievedAccount.Funds);
+
+		// Ensures that the account creation process does not add faulty auto-generations.
+		Assert.AreEqual(CurrencyType.Euro, richRetrievedAccount.Currency);
+
+		// Ensures that the same currency transactions are maintained.
+		Assert.IsTrue(richRetrievedAccount.Transactions.All(t => t.Currency == CurrencyType.Euro));
 	}
 
 	/// <summary>

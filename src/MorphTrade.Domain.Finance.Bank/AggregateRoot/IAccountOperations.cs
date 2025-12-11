@@ -14,6 +14,13 @@ public interface IAccountOperations
 	/// <returns></returns>
 	public double GetBalance();
 
+	/// <summary>
+	/// Allows adding a transaction to the account.
+	/// </summary>
+	/// <param name="transaction">Transaction to be added to the account.</param>
+	/// <returns></returns>
+	public Transaction RecordTransaction(Transaction transaction);
+
 	///  <summary>
 	///  Provides a crediting mechanism.
 	///  </summary>
