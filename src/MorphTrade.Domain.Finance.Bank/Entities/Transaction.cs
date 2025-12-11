@@ -1,16 +1,17 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using OpAn.App.MorphTrade.Abstractions.Core;
-using OpAn.App.MorphTrade.Domain.Finance.Enums;
-using OpAn.App.MorphTrade.Domain.Finance.Enums.Bank;
+using OpAn.App.MorphTrade.Domain.Finance.Bank.Enums;
 
-namespace OpAn.App.MorphTrade.Domain.Finance.Entities.Bank;
+namespace OpAn.App.MorphTrade.Domain.Finance.Bank.Entities;
 
 /// <summary>
 /// Base transaction entity that to be handled by the domain
 ///		MorphTrade.Domain.Finance.Bank.
 /// </summary>
 [PublicAPI]
+[Table("Transactions")]
 public class Transaction: Entity
 {
 	/// <summary>
@@ -30,13 +31,7 @@ public class Transaction: Entity
 	///		TransactionType.Deposit,
 	///		TransactionType.Withdraw
 	/// </summary>
-	public required string SourceAccount { get; set; }
-
-	/// <summary>
-	/// A Destination account is expected for the
-	///		TransactionType.FundTransfer
-	/// </summary>
-	public string? DestinationAccount { get; set; }
+	public required string AccountId { get; set; }
 
 	/// <summary>
 	/// Amount associated with the transaction

@@ -1,4 +1,4 @@
-namespace OpAn.App.MorphTrade.Domain.Finance.Enums.Bank;
+namespace OpAn.App.MorphTrade.Domain.Finance.Bank.Enums;
 
 /// <summary>
 /// A transaction type enumerable.

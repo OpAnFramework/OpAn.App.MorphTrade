@@ -1,38 +1,87 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using JetBrains.Annotations;
 using OpAn.App.MorphTrade.Abstractions.Core;
-using OpAn.App.MorphTrade.Domain.Finance.Entities.Bank;
+using OpAn.App.MorphTrade.Domain.Finance.Bank.Entities;
+using OpAn.App.MorphTrade.Domain.Finance.Bank.Enums;
 
 namespace OpAn.App.MorphTrade.Domain.Finance.Bank.AggregateRoot;
 
 /// <summary>
 /// Aggregate root for the account model.
 /// </summary>
+[Table("Accounts")]
 public class Account: Entity, IAccountOperations
 {
 	/// <summary>
 	/// An account name for the account.
 	/// </summary>
-	public required string AccountName { get; set; }
+	public required string AccountName { get; init; }
 
 	/// <summary>
 	/// Funds associated with the account.
 	/// </summary>
+	[PublicAPI]
 	public required double Funds { get; set; }
 
+	private readonly List<Transaction> _transactions = new List<Transaction>();
+
+	/// <summary>
+	/// Publicly accessible Transactions list.
+	/// </summary>
+	public IReadOnlyList<Transaction> Transactions => _transactions;
+
 	/// <inheritdoc />
-	public double GetBalance()
+	public double GetBalance() => Funds;
+
+	/// <inheritdoc />
+	public Transaction Credit(double amount, string description)
 	{
-		throw new NotImplementedException();
+		if (amount <= 0)
+			throw new ArgumentException("Deposit amount must be positive.");
+
+		// 1. Update the Aggregate Root's state (Balance)
+		Funds += amount;
+
+		// 2. Create and add the new entity (Transaction) internally
+		var transaction = new Transaction()
+		{
+			Id = Guid.NewGuid().ToString(),
+			AccountId = Id,
+			Amount = amount,
+			Reference = description,
+			Timestamp = DateTime.Now,
+			TransactionType = TransactionType.Deposit
+		};
+		_transactions.Add(transaction);
+
+		// 3. (Optional) Return the transaction, or simply return void/true
+		return transaction;
 	}
 
 	/// <inheritdoc />
-	public bool Credit(Transaction transaction)
+	public Transaction Debit(double amount, string description)
 	{
-		throw new NotImplementedException();
-	}
+		if (amount <= 0)
+			throw new ArgumentException("Debit amount must be positive.");
+		if (amount > Funds)
+			throw new ArgumentException("Debit amount must be less than Funds.");
 
-	/// <inheritdoc />
-	public bool Debit(Transaction transaction)
-	{
-		throw new NotImplementedException();
+		// 1. Update the Aggregate Root's state (Balance)
+		Funds -= amount;
+
+		// 2. Create and add the new entity (Transaction) internally
+		var transaction = new Transaction()
+		{
+			Id = Guid.NewGuid().ToString(),
+			AccountId = Id,
+			Amount = amount,
+			Reference = description,
+			Timestamp = DateTime.Now,
+			TransactionType = TransactionType.Withdraw
+		};
+		_transactions.Add(transaction);
+
+		// 3. (Optional) Return the transaction, or simply return void/true
+		return transaction;
 	}
 }

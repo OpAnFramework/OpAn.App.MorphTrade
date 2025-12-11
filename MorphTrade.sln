@@ -26,6 +26,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MorphTrade.Domain.Finance.B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MorphTrade.Domain.Ingestion.Tests", "tests\MorphTrade.Domain.Ingestion.Tests\MorphTrade.Domain.Ingestion.Tests.csproj", "{6BFEC9E4-7579-47BD-B51A-8CC69396BEC5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowDesign", "workspace\FlowDesign\FlowDesign.csproj", "{262575CC-93A2-4B87-8EA0-0156AB4A2E3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MorphTrade.Domain.Finance.Bank.Tests", "tests\MorphTrade.Domain.Finance.Bank.Tests\MorphTrade.Domain.Finance.Bank.Tests.csproj", "{48DB042E-CAD6-4007-A5F8-CF07B34F9FAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,5 +68,13 @@ Global
 		{2DE00801-7A4F-4CC3-842A-6515989CCB3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DE00801-7A4F-4CC3-842A-6515989CCB3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DE00801-7A4F-4CC3-842A-6515989CCB3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{262575CC-93A2-4B87-8EA0-0156AB4A2E3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{262575CC-93A2-4B87-8EA0-0156AB4A2E3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{262575CC-93A2-4B87-8EA0-0156AB4A2E3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{262575CC-93A2-4B87-8EA0-0156AB4A2E3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48DB042E-CAD6-4007-A5F8-CF07B34F9FAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48DB042E-CAD6-4007-A5F8-CF07B34F9FAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48DB042E-CAD6-4007-A5F8-CF07B34F9FAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48DB042E-CAD6-4007-A5F8-CF07B34F9FAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,5 +1,5 @@
-using OpAn.App.MorphTrade.Domain.Finance.Entities.Bank;
-using OpAn.App.MorphTrade.Domain.Finance.Enums.Bank;
+using OpAn.App.MorphTrade.Domain.Finance.Bank.Entities;
+using OpAn.App.MorphTrade.Domain.Finance.Bank.Enums;
 
 namespace OpAn.App.MorphTrade.Domain.Finance.Bank.AggregateRoot;
 
@@ -14,19 +14,19 @@ public interface IAccountOperations
 	/// <returns></returns>
 	public double GetBalance();
 
-	/// <summary>
-	/// Provides a crediting mechanism.
-	/// </summary>
-	/// <param name="transaction">
-	///		A transaction strictly associated to <seealso cref="TransactionType.Deposit"/>.</param>
-	/// <returns>Returns true if successful. Else returns false.</returns>
-	public bool Credit(Transaction transaction);
+	///  <summary>
+	///  Provides a crediting mechanism.
+	///  </summary>
+	///  <param name="amount">Amount to be credited.</param>
+	///  <param name="description">Description of the Transaction.</param>
+	///  <returns>Returns created transaction.</returns>
+	public Transaction Credit(double amount, string description);
 
 	/// <summary>
 	/// Provides a debiting mechanism.
 	/// </summary>
-	/// <param name="transaction">
-	///		A transaction strictly associated to <seealso cref="TransactionType.Deposit"/>.</param>
-	/// <returns>Returns true if successful. Else returns false.</returns>
-	public bool Debit(Transaction transaction);
+	///  <param name="amount">Amount to be credited.</param>
+	///  <param name="description">Description of the Transaction.</param>
+	///  <returns>Returns created transaction.</returns>
+	public Transaction Debit(double amount, string description);
 }

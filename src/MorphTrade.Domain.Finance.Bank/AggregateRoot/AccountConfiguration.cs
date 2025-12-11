@@ -14,5 +14,10 @@ public class AccountConfiguration: IEntityTypeConfiguration<Account>
 		builder.HasIndex(e => e.Id).IsUnique();
 		builder.Property(e => e.AccountName).IsRequired().HasMaxLength(100);
 		builder.Property(e => e.Funds).IsRequired();
+		builder.HasMany(a => a.Transactions)
+			.WithOne()
+			.HasForeignKey("AccountId")
+			.IsRequired()
+			.OnDelete(DeleteBehavior.Cascade);
 	}
 }

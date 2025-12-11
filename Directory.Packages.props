@@ -1,7 +1,7 @@
 ﻿<Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <CentralPackageVersionOverrideEnabled>false</CentralPackageVersionOverrideEnabled>
+    <CentralPackageVersionOverrideEnabled>true</CentralPackageVersionOverrideEnabled>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="fyers-api-v3" Version="1.0.6" />
@@ -10,6 +10,9 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.11" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.11" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="9.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="9.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.11" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="9.0.11" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.4" />
@@ -17,11 +20,11 @@
     <PackageVersion Include="SKB.Core.EditorConfig" Version="9.0.2" />
     <PackageVersion Include="skb.core.licenseconfig" Version="9.0.2" />
     <PackageVersion Include="Skender.Stock.Indicators" Version="2.7.0" />
-	<PackageVersion Include="MSTest.Analyzers" Version="3.6.4" />
-	<PackageVersion Include="MSTest.TestAdapter" Version="3.6.4" />
-	<PackageVersion Include="MSTest.TestFramework" Version="3.6.4" />
-	<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-	<PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.13.1" />
-	<PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="1.4.3" />
+    <PackageVersion Include="MSTest.Analyzers" Version="3.6.4" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="3.6.4" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.6.4" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.13.1" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="1.4.3" />
   </ItemGroup>
 </Project>

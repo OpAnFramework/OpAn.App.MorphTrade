@@ -1,10 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using OpAn.App.MorphTrade.Domain.Finance;
-using OpAn.App.MorphTrade.Domain.Finance.Bank;
 using OpAn.App.MorphTrade.Domain.Finance.Bank.AggregateRoot;
-using OpAn.App.MorphTrade.Domain.Finance.Entities.Bank;
+using OpAn.App.MorphTrade.Domain.Finance.Bank.Entities;
 
-namespace OpAn.App.MorphTrade.Infrastructure.Persistence;
+namespace OpAn.App.MorphTrade.Domain.Finance.Bank;
 
 /// <summary>
 /// Database context for the Bank Subdomain.
@@ -19,11 +17,6 @@ public class BankDbContext : DbContext
 	: base (options){
 
 	}
-
-	/// <summary>
-	///	Transactions added to the banking database.
-	/// </summary>
-	public DbSet<Transaction> Transactions { get; set; }
 
 	/// <summary>
 	/// Accounts added to the Banking database.

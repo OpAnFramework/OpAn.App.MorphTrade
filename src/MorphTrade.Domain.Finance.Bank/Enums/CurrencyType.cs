@@ -1,4 +1,4 @@
-namespace OpAn.App.MorphTrade.Domain.Finance.Enums;
+namespace OpAn.App.MorphTrade.Domain.Finance.Bank.Enums;
 
 /// <summary>
 /// A currency type.

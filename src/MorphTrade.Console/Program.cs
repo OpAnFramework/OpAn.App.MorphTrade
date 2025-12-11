@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpAn.App.MorphTrade.Console.Extensions;
+using OpAn.App.MorphTrade.Domain.Finance.Bank;
 using OpAn.App.MorphTrade.Domain.Ingestion.Extensions;
 using OpAn.App.MorphTrade.Infrastructure.Persistence;
 using OpAn.App.MorphTrade.Infrastructure.Persistence.Extension;
@@ -26,6 +27,8 @@ internal class Program
 
         // Add Configurations
         builder.AddConfigurations();
+        // Add Logging
+        builder.Services.AddLogging();
 
         // Exit if no DataVendor is configured
         if (builder.Configuration.GetValue<string>("DataVendor") is null)
@@ -50,7 +53,9 @@ internal class Program
 
 	    // Add Persistent database
 	    builder.Services
-		    .AddPersistenceDb(builder.Configuration);
+		    .AddPersistenceDb(builder.Configuration)
+		    .AddBankingDomain();	// Banking domain needs specific dependencies for persistence.
+
 
         // Run the hosted application
         var app = builder.Build();
