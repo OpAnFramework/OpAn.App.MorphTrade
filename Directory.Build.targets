@@ -1,6 +1,8 @@
 ﻿<Project>
     <PropertyGroup>
         <NoWarn>NU1507</NoWarn>
+		<NoWarn>NU1602</NoWarn>
+		<NoWarn>NU1604</NoWarn>
         <NoWarn>NU1701</NoWarn>
     </PropertyGroup>
     <Choose>
@@ -15,4 +17,33 @@
             </PropertyGroup>
         </Otherwise>
     </Choose>
+    
+    <!-- EF Core Design-time support for custom build paths -->
+    <Target Name="GetEFProjectMetadata" DependsOnTargets="ResolveReferences">
+        <ItemGroup>
+            <EFProjectMetadata Include="AssemblyName: $(AssemblyName)" />
+            <EFProjectMetadata Include="Language: C#" />
+            <EFProjectMetadata Include="OutputPath: $(OutputPath)" />
+            <EFProjectMetadata Include="Platform: $(Platform)" />
+            <EFProjectMetadata Include="PlatformTarget: $(PlatformTarget)" />
+            <EFProjectMetadata Include="ProjectAssetsFile: $(ProjectAssetsFile)" />
+            <EFProjectMetadata Include="ProjectDir: $(ProjectDir)" />
+            <EFProjectMetadata Include="ProjectDepsFilePath: $(ProjectDepsFilePath)" />
+            <EFProjectMetadata Include="ProjectRuntimeConfigFilePath: $(ProjectRuntimeConfigFilePath)" />
+            <EFProjectMetadata Include="RootNamespace: $(RootNamespace)" />
+            <EFProjectMetadata Include="RuntimeFrameworkVersion: $(RuntimeFrameworkVersion)" />
+            <EFProjectMetadata Include="TargetFileName: $(TargetFileName)" />
+            <EFProjectMetadata Include="TargetFrameworkMoniker: $(TargetFrameworkMoniker)" />
+            <EFProjectMetadata Include="TargetFramework: $(TargetFramework)" />
+            <EFProjectMetadata Include="TargetPath: $(TargetPath)" />
+            <EFProjectMetadata Include="Configuration: $(Configuration)" />
+            <EFProjectMetadata Include="Nullable: $(Nullable)" />
+            <EFProjectMetadata Include="TargetFrameworkVersion: $(TargetFrameworkVersion)" />
+            <EFProjectMetadata Include="CodeAnalysisRuleSet: $(CodeAnalysisRuleSet)" />
+            <EFProjectMetadata Include="TargetPlatformIdentifier: $(TargetPlatformIdentifier)" />
+            <EFProjectMetadata Include="TargetPlatformVersion: $(TargetPlatformVersion)" />
+            <EFProjectMetadata Include="TargetPlatformMinVersion: $(TargetPlatformMinVersion)" />
+        </ItemGroup>
+        <WriteLinesToFile File="$(EFProjectMetadataFile)" Lines="@(EFProjectMetadata)" Overwrite="true" Condition="'$(EFProjectMetadataFile)' != ''" />
+    </Target>
 </Project>

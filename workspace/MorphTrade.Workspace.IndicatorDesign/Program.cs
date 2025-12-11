@@ -2,8 +2,8 @@
 
 using System.Text.Json;
 using OpAn.App.MorphTrade.Abstractions.IngestionDomain;
-using SKB.Workspace.IndicatorDesign;
-using SKB.Workspace.IndicatorDesign.Abstractions;
+using OpAn.App.MorphTrade.Abstractions.Tools.JsonConverters;
+using OpAn.App.MorphTrade.Workspace.IndicatorDesign.Abstractions;
 
 namespace OpAn.App.IndicatorDesign;
 

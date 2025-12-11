@@ -13,9 +13,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting"/>
-        <PackageReference Include="Microsoft.Extensions.Logging"/>
+        <PackageReference Include="JetBrains.Annotations" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Hosting" />
+        <PackageReference Include="Microsoft.Extensions.Logging" />
         <PackageReference Include="SKB.Core.EditorConfig">
             <IncludeAssets>Build</IncludeAssets>
             <PrivateAssets>All</PrivateAssets>
@@ -35,6 +39,7 @@
     <ItemGroup>
       <ProjectReference Include="..\MorphTrade.Domain.Flows\MorphTrade.Domain.Flows.csproj" />
       <ProjectReference Include="..\MorphTrade.Domain.Ingestion\MorphTrade.Domain.Ingestion.csproj" />
+      <ProjectReference Include="..\MorphTrade.Infrastructure.Persistence\MorphTrade.Infrastructure.Persistence.csproj" />
     </ItemGroup>
 
 </Project>

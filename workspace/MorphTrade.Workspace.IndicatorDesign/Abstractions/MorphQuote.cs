@@ -1,6 +1,6 @@
 using Skender.Stock.Indicators;
 
-namespace SKB.Workspace.IndicatorDesign.Abstractions;
+namespace OpAn.App.MorphTrade.Workspace.IndicatorDesign.Abstractions;
 
 /// <summary>
 /// Custom quote for MorphTrade.
