@@ -24,7 +24,7 @@ public static class TestDataExtensions
 			.Get<TestDataOptions>() ?? new TestDataOptions();
 
 		// Add mock test data to the service container
-		var data = File.ReadAllText("test_data.json");
+		var data = File.ReadAllText(options.TestDataJsonAbsolutePath);
 		var jsonSerializerOptions = new JsonSerializerOptions
 		{
 			Converters = { new UnixSecondsToDateTimeConverter() }

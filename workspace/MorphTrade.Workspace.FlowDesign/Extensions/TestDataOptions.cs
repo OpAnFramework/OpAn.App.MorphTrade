@@ -8,5 +8,5 @@ public class TestDataOptions
 	/// <summary>
 	/// Absolute path to the test data json file.
 	/// </summary>
-	public string TestDataJsonAbsolutePath { get; set; } = "test_data.json";
+	public string TestDataJsonAbsolutePath { get; init; } = "test_data.json";
 }
