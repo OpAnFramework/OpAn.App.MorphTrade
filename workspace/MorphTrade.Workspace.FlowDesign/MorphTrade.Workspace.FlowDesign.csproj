@@ -7,4 +7,20 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="JetBrains.Annotations" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" />
+    </ItemGroup>
+	
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\MorphTrade.Abstractions\MorphTrade.Abstractions.csproj" />
+      <ProjectReference Include="..\..\src\MorphTrade.Console\MorphTrade.Console.csproj" />
+    </ItemGroup>
+
+	<ItemGroup>
+		<None Include="test_data.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
 </Project>
