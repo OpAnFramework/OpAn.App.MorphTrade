@@ -19,13 +19,13 @@ public class DataVendorAlpaca: IDataVendor
 	/// <summary>
 	/// Constructor for the Alpaca Data Vendor.
 	/// </summary>
-	/// <param name="clientWrapper">HttpClientWrapper for the alpaca.</param>
+	/// <param name="clientFactory">HttpClientWrapper for the alpaca.</param>
 	/// <param name="timeframeHelper">Timeframe helper for the Alpaca vendor.</param>
 	public DataVendorAlpaca(
-		IAlpacaHttpClientWrapper clientWrapper,
+		IAlpacaHttpClientFactory clientFactory,
 		AlpacaTimeframeHelper timeframeHelper)
 	{
-		_client = clientWrapper.GetClient;
+		_client = clientFactory.GetClient;
 		_timeframeHelper = timeframeHelper;
 	}
 	/// <inheritdoc />
