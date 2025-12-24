@@ -6,13 +6,13 @@ namespace OpAn.App.MorphTrade.Domain.Ingestion.DataVendorAlpaca.Http;
 /// <summary>
 /// Wrapper of HttpClient for Alpaca.
 /// </summary>
-public class AlpacaHttpClientWrapper: IAlpacaHttpClientWrapper
+public class AlpacaHttpClientFactory: IAlpacaHttpClientFactory
 {
 	/// <summary>
 	/// Constructor for Alpaca HttpClient wrapper.
 	/// </summary>
 	/// <param name="options">Options for the Alpaca data vendor.</param>
-	public AlpacaHttpClientWrapper(
+	public AlpacaHttpClientFactory(
 			IOptions<AlpacaDataVendorOptions> options
 		)
 	{

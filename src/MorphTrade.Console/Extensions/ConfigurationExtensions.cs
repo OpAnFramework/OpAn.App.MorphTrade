@@ -9,18 +9,22 @@ namespace OpAn.App.MorphTrade.Console.Extensions;
 /// </summary>
 public static class ConfigurationExetensions
 {
-    /// <summary>
-    /// Adds the Configurations to the builder
-    /// </summary>
-    /// <param name="builder">calling HostApplicaitonBuilder <seealso cref="IHostApplicationBuilder"/></param>
-    /// <returns></returns>
-    public static IHostApplicationBuilder AddConfigurations(this IHostApplicationBuilder builder)
+	/// <summary>
+	/// Adds the Configurations to the builder
+	/// </summary>
+	/// <param name="builder">calling HostApplicaitonBuilder <seealso cref="IHostApplicationBuilder"/></param>
+	/// <param name="assembly">target assembly to be targeted.</param>
+	/// <returns></returns>
+	public static IHostApplicationBuilder AddConfigurations(
+	    this IHostApplicationBuilder builder,
+	    Assembly? assembly = null)
     {
+	    Assembly targetAssembly = assembly ?? Assembly.GetExecutingAssembly();
         // Add Builder Configuration Options
         AddConfigurationsFromJsonFile(
             builder,
             Path.GetFullPath(
-                Directory.GetParent(Path.GetFullPath(Assembly.GetExecutingAssembly().Location))!.ToString()
+                Directory.GetParent(Path.GetFullPath(targetAssembly.Location))!.ToString()
             )
         );
         return builder;

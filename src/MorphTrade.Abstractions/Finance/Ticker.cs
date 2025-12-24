@@ -18,7 +18,7 @@ public class Ticker
 	/// <summary>
 	/// Volume of the ticker.
 	/// </summary>
-	public required decimal Volume { get; set; }
+	public decimal? Volume { get; set; }
 
 	/// <summary>
 	/// Quantity to trade.

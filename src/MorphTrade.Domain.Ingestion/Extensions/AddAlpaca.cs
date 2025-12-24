@@ -29,7 +29,7 @@ public static class AddAlpaca
 		{
 			builder
 				.Services
-				.AddSingleton<IAlpacaHttpClientWrapper, AlpacaHttpClientWrapper>()
+				.AddSingleton<IAlpacaHttpClientFactory, AlpacaHttpClientFactory>()
 				.Configure<AlpacaDataVendorOptions>(options =>
 					{
 						options.BaseAddress = dataVendorOptions.BaseAddress;

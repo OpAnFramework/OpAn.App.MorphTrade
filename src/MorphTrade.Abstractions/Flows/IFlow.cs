@@ -1,3 +1,4 @@
+using OpAn.App.MorphTrade.Abstractions.Finance;
 using OpAn.App.MorphTrade.Abstractions.IngestionDomain;
 
 namespace OpAn.App.MorphTrade.Abstractions.Flows;
@@ -15,7 +16,26 @@ public interface IFlow
 	/// <summary>
 	/// Executes flow for the live context.
 	/// </summary>
-	/// <param name="datapoints"></param>
-	/// <param name="currentDatapoint"></param>
-	void ExecuteLive(IList<OlhcvDatapoint> datapoints, OlhcvDatapoint currentDatapoint);
+	/// <param name="datapoints">Data points for the live execution.</param>
+	/// <param name="currentDatapoint">Data point for the evaluation.</param>
+	/// <param name="callResponses">Optional trade call recorder.</param>
+	/// <param name="symbol">Symbol to be checked for.</param>
+	Task ExecuteLive(
+		IList<OlhcvDatapoint> datapoints,
+		OlhcvDatapoint currentDatapoint,
+		in IList<CallResponse>? callResponses,
+		string? symbol);
+
+	/// <summary>
+	/// Performs backtest for the live execution flow.
+	/// </summary>
+	/// <param name="screenedData"></param>
+	/// <param name="decisionList"></param>
+	/// <param name="results"></param>
+	void Backtest(
+		IDictionary<string, IList<OlhcvDatapoint>> screenedData,
+		out IList<CallResponse> decisionList,
+		out IList<object> results);
+
+	// TODO: Add a backtest parameter overload for the live data tenant
 }
