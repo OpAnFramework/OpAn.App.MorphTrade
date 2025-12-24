@@ -1,12 +1,14 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System.Text.Json;
+using JetBrains.Annotations;
+using OpAn.App.MorphTrade.Abstractions.Core;
 using OpAn.App.MorphTrade.Abstractions.IngestionDomain;
 using OpAn.App.MorphTrade.Abstractions.Tools.JsonConverters;
-using OpAn.App.MorphTrade.Workspace.IndicatorDesign.Abstractions;
 
-namespace OpAn.App.IndicatorDesign;
+namespace OpAn.App.MorphTrade.Workspace.IndicatorDesign;
 
+[PublicAPI]
 internal class Program
 {
 	public static void Main(string[] args)
