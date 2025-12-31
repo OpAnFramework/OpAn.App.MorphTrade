@@ -1,8 +1,10 @@
 using System.Reflection;
+using CmdScale.EntityFrameworkCore.TimescaleDB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpAn.App.MorphTrade.Domain.Finance.Bank;
+using OpAn.App.MorphTrade.Domain.Flows;
 
 namespace OpAn.App.MorphTrade.Infrastructure.Persistence.Extension;
 
@@ -34,6 +36,22 @@ public static class DatabaseExtensions
 								.Assembly.GetName().Name!);
 						});
 			});
+
+		// Add database for the Flows Management.
+		services.AddDbContext<FlowsDbContext>(options =>
+		{
+			options
+				.UseNpgsql(
+					configuration.GetConnectionString("FlowManagementDbConnection"),
+					npgsqlOptions =>
+					{
+						npgsqlOptions.MigrationsAssembly(
+							typeof(IFlowsAssemblyMarker).Assembly.GetName().Name!
+						);
+					})
+				.UseTimescaleDb();
+		});
+
 		return services;
 	}
 }

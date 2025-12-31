@@ -14,3 +14,5 @@ riderModule.iml
 /_ReSharper.Caches/
 
 [Oo]ut/
+
+.env

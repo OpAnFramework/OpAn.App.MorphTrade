@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="CmdScale.EntityFrameworkCore.TimescaleDB" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
         <PrivateAssets>all</PrivateAssets>
@@ -14,11 +15,13 @@
       </PackageReference>
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
       <PackageReference Include="Microsoft.Extensions.Hosting" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\MorphTrade.Domain.Finance.Bank\MorphTrade.Domain.Finance.Bank.csproj" />
       <ProjectReference Include="..\MorphTrade.Domain.Finance\MorphTrade.Domain.Finance.csproj" />
+      <ProjectReference Include="..\MorphTrade.Domain.Flows\MorphTrade.Domain.Flows.csproj" />
     </ItemGroup>
 
 </Project>
