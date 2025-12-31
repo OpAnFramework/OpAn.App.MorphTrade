@@ -1,3 +1,4 @@
+using OpAn.App.MorphTrade.Abstractions.Core;
 using OpAn.App.MorphTrade.Abstractions.Flows.Enums;
 
 namespace OpAn.App.MorphTrade.Domain.Flows.Entities;
@@ -5,13 +6,8 @@ namespace OpAn.App.MorphTrade.Domain.Flows.Entities;
 /// <summary>
 /// A flow entity that specifies meta information about the flow.
 /// </summary>
-public class FlowMeta
+public class FlowMeta: Entity
 {
-	/// <summary>
-	/// Identifier of the flow.
-	/// </summary>
-	public required Guid Id { get; set; }  = Guid.NewGuid();
-
 	/// <summary>
 	/// Name of the flow.
 	/// </summary>

@@ -1,5 +1,6 @@
 using CmdScale.EntityFrameworkCore.TimescaleDB.Configuration.Hypertable;
 using Microsoft.EntityFrameworkCore;
+using OpAn.App.MorphTrade.Abstractions.Core;
 using OpAn.App.MorphTrade.Abstractions.Finance;
 
 namespace OpAn.App.MorphTrade.Domain.Flows.Entities;
@@ -9,13 +10,8 @@ namespace OpAn.App.MorphTrade.Domain.Flows.Entities;
 /// </summary>
 [Hypertable(nameof(Timestamp), ChunkTimeInterval = "86400000")] // 1 day in milliseconds
 [PrimaryKey(nameof(Id), nameof(Timestamp))]
-public class CallResponseEvent
+public class CallResponseEvent: Entity
 {
-	/// <summary>
-	/// Identifier of the Call Response Event.
-	/// </summary>
-	public Guid Id { get; set; }
-
 	/// <summary>
 	/// Timestamp of the Call response.
 	/// </summary>
@@ -24,7 +20,7 @@ public class CallResponseEvent
 	/// <summary>
 	/// Identifier of the flow that needs to be tracked with.
 	/// </summary>
-	public Guid FlowId { get; set; }
+	public required string FlowId { get; set; }
 
 	/// <summary>
 	/// Identifier of the flow that needs to be tracked with.
