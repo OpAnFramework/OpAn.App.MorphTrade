@@ -37,21 +37,24 @@ public static class DatabaseExtensions
 						});
 			});
 
-		// Add database for the Flows Management.
-		services.AddDbContext<FlowsDbContext>(options =>
+		// Add the flow management persistence.
+		string? flowManagementConnectionString = configuration.GetConnectionString("DefaultFlowManagementConnection");
+		if (!string.IsNullOrEmpty(flowManagementConnectionString))
 		{
-			options
-				.UseNpgsql(
-					configuration.GetConnectionString("FlowManagementDbConnection"),
-					npgsqlOptions =>
-					{
-						npgsqlOptions.MigrationsAssembly(
-							typeof(IFlowsAssemblyMarker).Assembly.GetName().Name!
-						);
-					})
-				.UseTimescaleDb();
-		});
-
+			services.AddDbContext<FlowsDbContext>(options =>
+			{
+				options
+					.UseNpgsql(
+						configuration.GetConnectionString("FlowManagementDbConnection"),
+						npgsqlOptions =>
+						{
+							npgsqlOptions.MigrationsAssembly(
+								typeof(IFlowsAssemblyMarker).Assembly.GetName().Name!
+							);
+						})
+					.UseTimescaleDb();
+			});
+		}
 		return services;
 	}
 }
