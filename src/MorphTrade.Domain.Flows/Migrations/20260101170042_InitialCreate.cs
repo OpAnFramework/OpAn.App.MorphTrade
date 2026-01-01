@@ -18,7 +18,7 @@ namespace OpAn.App.MorphTrade.Domain.Flows.Migrations
                 name: "Flows",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     LastUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     StatusDescription = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
@@ -33,9 +33,9 @@ namespace OpAn.App.MorphTrade.Domain.Flows.Migrations
                 name: "CallResponseEvents",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<string>(type: "text", nullable: false),
                     Timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    FlowId = table.Column<Guid>(type: "uuid", nullable: false),
+                    FlowId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     IsBacktesting = table.Column<bool>(type: "boolean", nullable: false),
                     TradeCall = table.Column<string>(type: "text", nullable: false),
                     Ticker_Symbol = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),

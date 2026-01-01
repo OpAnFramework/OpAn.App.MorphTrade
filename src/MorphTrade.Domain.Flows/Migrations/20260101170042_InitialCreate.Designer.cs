@@ -12,7 +12,7 @@ using OpAn.App.MorphTrade.Domain.Flows;
 namespace OpAn.App.MorphTrade.Domain.Flows.Migrations
 {
     [DbContext(typeof(FlowsDbContext))]
-    [Migration("20251231181050_InitialCreate")]
+    [Migration("20260101170042_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -28,14 +28,16 @@ namespace OpAn.App.MorphTrade.Domain.Flows.Migrations
 
             modelBuilder.Entity("OpAn.App.MorphTrade.Domain.Flows.Entities.CallResponseEvent", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("FlowId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("FlowId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<bool>("IsBacktesting")
                         .HasColumnType("boolean");
@@ -53,9 +55,8 @@ namespace OpAn.App.MorphTrade.Domain.Flows.Migrations
 
             modelBuilder.Entity("OpAn.App.MorphTrade.Domain.Flows.Entities.FlowMeta", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnType("timestamp with time zone");
@@ -90,8 +91,8 @@ namespace OpAn.App.MorphTrade.Domain.Flows.Migrations
 
                     b.OwnsOne("OpAn.App.MorphTrade.Abstractions.Finance.Ticker", "Ticker", b1 =>
                         {
-                            b1.Property<Guid>("CallResponseEventId")
-                                .HasColumnType("uuid");
+                            b1.Property<string>("CallResponseEventId")
+                                .HasColumnType("text");
 
                             b1.Property<DateTime>("CallResponseEventTimestamp")
                                 .HasColumnType("timestamp with time zone");

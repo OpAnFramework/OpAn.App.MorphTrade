@@ -9,9 +9,21 @@ namespace OpAn.App.MorphTrade.Abstractions.Flows;
 public interface IFlow
 {
 	/// <summary>
+	/// Provides a name for the flow.
+	/// </summary>
+	string Name { get; set; }
+
+	/// <summary>
+	/// Returns the flow instance name.
+	/// </summary>
+	/// <returns></returns>
+	string GetFlowInstanceName();
+
+	/// <summary>
 	/// Executes the flow.
 	/// </summary>
-	void Execute();
+	Task ExecuteAsync(
+		CancellationToken cancellationToken = default);
 
 	/// <summary>
 	/// Executes flow for the live context.
@@ -38,4 +50,8 @@ public interface IFlow
 		out IList<object> results);
 
 	// TODO: Add a backtest parameter overload for the live data tenant
+	/// <summary>
+	/// Adds a live backtesting mechanism to the flow.
+	/// </summary>
+	Task BacktestLive(CancellationToken cancellationToken = default);
 }

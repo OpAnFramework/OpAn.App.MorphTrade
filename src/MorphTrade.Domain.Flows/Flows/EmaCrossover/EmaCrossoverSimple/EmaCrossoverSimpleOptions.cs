@@ -1,11 +1,12 @@
 using OpAn.App.MorphTrade.Abstractions.Finance;
+using OpAn.App.MorphTrade.Abstractions.Flows;
 
-namespace OpAn.App.MorphTrade.Domain.Flows.EmaCrossover.EmaCrossoverSimple;
+namespace OpAn.App.MorphTrade.Domain.Flows.Flows.EmaCrossover.EmaCrossoverSimple;
 
 /// <summary>
 /// Options for simple EMA Crossover flow.
 /// </summary>
-public class EmaCrossoverSimpleOptions
+public class EmaCrossoverSimpleOptions: FlowOptions
 {
 	/// <summary>
 	/// A faster EMA indicator count would provide,

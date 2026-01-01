@@ -10,7 +10,7 @@ using OpAn.App.MorphTrade.Abstractions.Flows;
 using OpAn.App.MorphTrade.Abstractions.IngestionDomain;
 using OpAn.App.MorphTrade.Console.Extensions;
 using OpAn.App.MorphTrade.Domain.Finance.Trader;
-using OpAn.App.MorphTrade.Domain.Flows.EmaCrossover.EmaCrossoverSimple;
+using OpAn.App.MorphTrade.Domain.Flows.Flows.EmaCrossover.EmaCrossoverSimple;
 using OpAn.App.MorphTrade.Workspace.Flows.Backtests.Extensions;
 
 namespace OpAn.App.MorphTrade.Workspace.Flows.Backtests;

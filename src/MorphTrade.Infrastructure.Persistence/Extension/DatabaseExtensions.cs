@@ -38,7 +38,7 @@ public static class DatabaseExtensions
 			});
 
 		// Add the flow management persistence.
-		string? flowManagementConnectionString = configuration.GetConnectionString("DefaultFlowManagementConnection");
+		string? flowManagementConnectionString = configuration.GetConnectionString("FlowManagementDbConnection");
 		if (!string.IsNullOrEmpty(flowManagementConnectionString))
 		{
 			services.AddDbContext<FlowsDbContext>(options =>

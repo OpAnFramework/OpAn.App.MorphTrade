@@ -6,7 +6,7 @@ using OpAn.App.MorphTrade.Abstractions.Flows;
 using OpAn.App.MorphTrade.Abstractions.IngestionDomain;
 using Skender.Stock.Indicators;
 
-namespace OpAn.App.MorphTrade.Domain.Flows.EmaCrossover.EmaCrossoverSimple;
+namespace OpAn.App.MorphTrade.Domain.Flows.Flows.EmaCrossover.EmaCrossoverSimple;
 /// <summary>
 /// A simple EMA crossover flow uses fast moving and slow moving EMA indicators.
 ///		The crossover provides a change of trend.
@@ -18,31 +18,48 @@ public class EmaCrossoverSimpleFlow: IFlow
 	private readonly ITrader _trader;
 	private bool? _isHolding, _isBought, _isClosed;
 	private EmaResult? _slowEmaResult = null, _fastEmaResult = null;
+	private readonly IDataVendor _dataVendor;
 
 	/// <summary>
 	/// Constructor for the simple EMA crossover flow.
 	/// </summary>
 	/// <param name="options">Options to be fed for the flow.</param>
 	/// <param name="logger">Logger for targeted distributed logging.</param>
+	/// <param name="dataVendor">Provides the live data vendor.</param>
 	/// <param name="trader">Trader to call decisions.</param>
 	public EmaCrossoverSimpleFlow(
 			IOptions<EmaCrossoverSimpleOptions> options,
 			ILogger<EmaCrossoverSimpleFlow> logger,
+			IDataVendor dataVendor,
 			ITrader trader)
 	{
 		_options = options.Value;
 		_logger = logger;
+		_dataVendor = dataVendor;
 		_trader = trader;
 		_isHolding = null;
 		_isBought = null;
 		_isClosed = null;
 	}
 
+	/// <inheritdoc />
+	public string Name { get; set; } = nameof(EmaCrossoverSimpleFlow);
 
 	/// <inheritdoc />
-	public void Execute()
+	public string GetFlowInstanceName()
 	{
-		throw new NotImplementedException();
+		return $"{Name}_{_options.Identifier}";
+	}
+
+	/// <inheritdoc />
+	public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+	{
+		_logger.LogInformation("EmaCrossoverSimpleFlow started");
+		while (!cancellationToken.IsCancellationRequested)
+		{
+			_logger.LogInformation("EmaCrossoverSimpleFlow running ...");
+			await Task.Delay(1000, cancellationToken);
+		}
 	}
 
 	/// <inheritdoc />
@@ -212,6 +229,17 @@ public class EmaCrossoverSimpleFlow: IFlow
 			});
 		}
 		_logger.LogInformation($"Finished backtest: {nameof(EmaCrossoverSimpleFlow)}");
+	}
+
+	/// <inheritdoc />
+	public async Task BacktestLive(CancellationToken cancellationToken = default)
+	{
+		_logger.LogInformation("Starting backtest: {NAME}", Name);
+		while (!cancellationToken.IsCancellationRequested)
+		{
+			_logger.LogInformation("Running the backtest");
+			await Task.Delay(1000, cancellationToken);
+		}
 	}
 
 	private int GetEpochTime(DateTime dateTime) => (int) (dateTime - new DateTime(1970, 1, 1)).TotalSeconds;

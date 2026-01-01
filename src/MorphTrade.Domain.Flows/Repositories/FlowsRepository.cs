@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using OpAn.App.MorphTrade.Abstractions.Flows;
 using OpAn.App.MorphTrade.Domain.Flows.Entities;
 
@@ -8,27 +10,125 @@ namespace OpAn.App.MorphTrade.Domain.Flows.Repositories;
 /// </summary>
 public class FlowsRepository: IFlowsRepository
 {
-	/// <inheritdoc />
-	public Task<FlowMeta?> GetFlowById(string id)
+	private readonly ILogger<FlowsRepository> _logger;
+	private readonly FlowsDbContext _flowsDbContext;
+
+	/// <summary>
+	/// Constructor for the Flows Repository.
+	/// </summary>
+	/// <param name="logger">Injected logger.</param>
+	/// <param name="flowsDbContext">Injected database context.</param>
+	public FlowsRepository(
+		ILogger<FlowsRepository> logger,
+		FlowsDbContext flowsDbContext)
 	{
-		throw new NotImplementedException();
+		_logger	= logger;
+		_flowsDbContext = flowsDbContext;
 	}
 
 	/// <inheritdoc />
-	public Task<FlowMeta[]?> GetFlowByName(string name)
+	public async Task<FlowMeta?> GetFlowByIdAsync(string id)
 	{
-		throw new NotImplementedException();
+		_logger.LogDebug("Retrieving flow with ID: {ID}", id);
+		return await _flowsDbContext.Flows.FirstOrDefaultAsync(f => f.Id == id);
 	}
 
 	/// <inheritdoc />
-	public Task<FlowMeta?> CreateFlow(string name, string description)
+	public async Task<IList<FlowMeta>?> GetFlowsByNameAsync(string name)
 	{
-		throw new NotImplementedException();
+		_logger.LogDebug("Retrieving all flows with name: {NAME}", name);
+		return await _flowsDbContext.Flows.Where(f => f.Name == name).ToArrayAsync();
 	}
 
 	/// <inheritdoc />
-	public Task<CallResponseEvent?> AddCallResponse(FlowMeta flow, CallResponse callResponse)
+	public async Task<FlowMeta?> CreateFlowAsync(FlowMeta flow)
 	{
-		throw new NotImplementedException();
+		_logger.LogDebug("Creating new flow with name: {NAME}", flow.Name);
+		await _flowsDbContext.Flows.AddAsync(flow);
+		await _flowsDbContext.SaveChangesAsync();
+		return flow;
+	}
+
+	/// <inheritdoc />
+	public async Task<FlowMeta?> CreateUpdateFlowAsync(FlowMeta flow)
+	{
+		_logger.LogDebug("Updating new flow with name: {NAME}", flow.Name);
+		FlowMeta? existingFlow = await _flowsDbContext
+			.Flows
+			.FirstOrDefaultAsync(f => f.Id == flow.Id);
+
+		if (existingFlow == null)
+		{
+			return await CreateFlowAsync(flow);
+		}
+
+		var properties = typeof(FlowMeta).GetProperties()
+			.Where(p => p.CanWrite && p.Name != nameof(flow.Id));
+
+		foreach (var property in properties)
+		{
+			property
+				.SetValue(existingFlow, property.GetValue(flow));
+		}
+
+		await _flowsDbContext.SaveChangesAsync();
+		return existingFlow;
+	}
+
+	/// <inheritdoc />
+	public async Task<CallResponseEvent?> AddCallResponseAsync(
+		FlowMeta flow,
+		CallResponse callResponse,
+		bool isBacktesting = false)
+	{
+		CallResponseEvent callResponseEvent = new CallResponseEvent()
+		{
+			Id = Guid.NewGuid().ToString(),
+			Ticker = callResponse.Ticker,
+			FlowId = flow.Id,
+			Flow = flow,
+			Timestamp = DateTimeOffset.FromUnixTimeSeconds(callResponse.Timestamp).UtcDateTime,
+			TradeCall = callResponse.TradeCall,
+			IsBacktesting = isBacktesting
+		};
+
+		_logger.LogDebug(
+			"Adding new call response with ID: {ID};" +
+			"To the flow with ID: {flowId}",
+			callResponseEvent.Id,
+			callResponseEvent.FlowId);
+
+		await _flowsDbContext.CallResponseEvents.AddAsync(callResponseEvent);
+		await _flowsDbContext.SaveChangesAsync();
+		return callResponseEvent;
+	}
+
+	/// <inheritdoc />
+	public async Task<IList<CallResponseEvent>?> GetAllCallResponseEventsAsync(FlowMeta flow)
+	{
+		_logger.LogDebug("Retrieving all call response events from the flow with ID: {ID}", flow.Id);
+		return await _flowsDbContext
+			.CallResponseEvents
+			.Where(e => e.FlowId == flow.Id)
+			.ToListAsync();
+	}
+
+	/// <inheritdoc />
+	public async Task<(FlowMeta? flowInfo, IList<CallResponseEvent>? callResponseEvents)> RemoveFlowAsync(FlowMeta flow)
+	{
+		FlowMeta? flowInfo = _flowsDbContext
+			.Flows
+			.FirstOrDefault(f => f.Id == flow.Id);
+
+		IList<CallResponseEvent> callResponseEvents = await _flowsDbContext
+			.CallResponseEvents
+			.Where(e => e.FlowId == flow.Id)
+			.ToListAsync();
+
+		_logger.LogDebug("Deleting all call response events and flows information for flow ID: {ID}", flow.Id);
+		_flowsDbContext.CallResponseEvents.RemoveRange(callResponseEvents);
+		_flowsDbContext.Flows.Remove(flow);
+		await _flowsDbContext.SaveChangesAsync();
+		return (flowInfo, callResponseEvents);
 	}
 }
