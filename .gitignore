@@ -16,3 +16,6 @@ riderModule.iml
 [Oo]ut/
 
 .env
+
+# docfx _site for the documentation should be ignored
+_site
