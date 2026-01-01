@@ -16,7 +16,7 @@ public class FlowsManager: BackgroundService
 	private readonly ILogger<FlowsManager> _logger;
 	private readonly IServiceScopeFactory _serviceScopeFactory;
 	private readonly IFlowsRepository _flowsRepository;
-	private readonly List<Task> _runningFlows = new List<Task>();
+	private readonly List<Task> _runningFlows;
 	private readonly IHostApplicationLifetime _hostApplicationLifetime;
 
 	///  <summary>
@@ -36,6 +36,7 @@ public class FlowsManager: BackgroundService
 		_flowsRepository = flowsRepository;
 		_logger = logger;
 		_serviceScopeFactory = scopeFactory;
+		_runningFlows = new List<Task>();
 		_hostApplicationLifetime = applicationLifetime;
 	}
 
@@ -84,7 +85,7 @@ public class FlowsManager: BackgroundService
 	/// <param name="flow">Flow to start.</param>
 	/// <param name="stoppingToken">Stopping token.</param>
 	/// <returns></returns>
-	public async Task StartFlow(IFlow flow, CancellationToken stoppingToken)
+	private async Task StartFlow(IFlow flow, CancellationToken stoppingToken)
 	{
 		var serviceScope = _serviceScopeFactory.CreateScope();
 		// Get flow from the database
@@ -102,6 +103,8 @@ public class FlowsManager: BackgroundService
 
 		entry.Status = FlowStatus.Running;
 		flowMetadata.Status = entry.Status;
+		flowMetadata.StatusDescription = "Operation started";
+		flowMetadata.LastUpdated = DateTime.UtcNow;
 
 		await _flowsRepository.CreateUpdateFlowAsync(flowMetadata);
 
@@ -117,6 +120,7 @@ public class FlowsManager: BackgroundService
 			entry.Status = FlowStatus.Canceled;
 			flowMetadata.Status = entry.Status;
 			flowMetadata.StatusDescription = "Operation cancelled";
+			flowMetadata.LastUpdated = DateTime.UtcNow;
 			await _flowsRepository.CreateUpdateFlowAsync(flowMetadata);
 		}
 		catch (Exception ex)
@@ -125,7 +129,9 @@ public class FlowsManager: BackgroundService
 			entry.Status = FlowStatus.Failed;
 			flowMetadata.Status = entry.Status;
 			flowMetadata.StatusDescription = ex.Message;
+			flowMetadata.LastUpdated = DateTime.UtcNow;
 			await _flowsRepository.CreateUpdateFlowAsync(flowMetadata);
+			await base.StopAsync(stoppingToken);
 		}
 	}
 
@@ -133,7 +139,7 @@ public class FlowsManager: BackgroundService
 	/// Stops a specific flow.
 	/// </summary>
 	/// <param name="flow">Flow to be stopped.</param>
-	public async Task StopFlow(IFlow flow)
+	private async Task StopFlow(IFlow flow)
 	{
 		var serviceScope = _serviceScopeFactory.CreateScope();
 		// Get flow from the database
@@ -153,6 +159,7 @@ public class FlowsManager: BackgroundService
 
 		flowMetadata.Status = entry.Status;
 		flowMetadata.StatusDescription = "Operation stopped";
+		flowMetadata.LastUpdated = DateTime.UtcNow;
 		await _flowsRepository.CreateUpdateFlowAsync(flowMetadata);
 	}
 
