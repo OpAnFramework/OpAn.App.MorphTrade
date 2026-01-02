@@ -86,7 +86,6 @@ public class FlowsRepository: IFlowsRepository
 			Id = Guid.NewGuid().ToString(),
 			Ticker = callResponse.Ticker,
 			FlowId = flow.Id,
-			Flow = flow,
 			Timestamp = DateTimeOffset.FromUnixTimeSeconds(callResponse.Timestamp).UtcDateTime,
 			TradeCall = callResponse.TradeCall,
 			IsBacktesting = isBacktesting
@@ -101,6 +100,28 @@ public class FlowsRepository: IFlowsRepository
 		await _flowsDbContext.CallResponseEvents.AddAsync(callResponseEvent);
 		await _flowsDbContext.SaveChangesAsync();
 		return callResponseEvent;
+	}
+
+	/// <inheritdoc />
+	public async Task<CallResponseEvent?> CreateUpdateCallResponseEventAsync(FlowMeta flow, CallResponse callResponse, bool isBacktesting = false)
+	{
+		_logger.LogDebug("Updating the call response for {FlowId}", flow.Id);
+		CallResponseEvent? responseEvent = await _flowsDbContext
+			.CallResponseEvents
+			.FirstOrDefaultAsync(response =>
+				response.FlowId == flow.Id
+				&& response.Timestamp
+					== DateTimeOffset.FromUnixTimeSeconds(callResponse.Timestamp).UtcDateTime
+				&& response.IsBacktesting == isBacktesting
+				&& response.TradeCall == callResponse.TradeCall
+				&& response.Ticker.Symbol == callResponse.Ticker.Symbol);
+
+		// TODO: Update CallResponseEvent logic
+		if (responseEvent is null)
+		{
+			return await AddCallResponseAsync(flow, callResponse, isBacktesting);
+		}
+		return responseEvent;
 	}
 
 	/// <inheritdoc />

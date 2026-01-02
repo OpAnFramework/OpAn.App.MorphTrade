@@ -1,3 +1,4 @@
+using OpAn.App.MorphTrade.Abstractions.Core;
 using OpAn.App.MorphTrade.Abstractions.Finance;
 using OpAn.App.MorphTrade.Abstractions.IngestionDomain;
 
@@ -26,6 +27,17 @@ public interface IFlow
 		CancellationToken cancellationToken = default);
 
 	/// <summary>
+	/// Executes the flow with the provided FlowExecutionContext.
+	/// </summary>
+	/// <remarks>
+	/// <seealso cref="FlowExecutionContext"/>
+	/// </remarks>
+	Task ExecuteAsync(
+		FlowExecutionContext context,
+		CancellationToken cancellationToken = default
+		);
+
+	/// <summary>
 	/// Executes flow for the live context.
 	/// </summary>
 	/// <param name="datapoints">Data points for the live execution.</param>
@@ -35,7 +47,7 @@ public interface IFlow
 	Task ExecuteLive(
 		IList<OlhcvDatapoint> datapoints,
 		OlhcvDatapoint currentDatapoint,
-		in IList<CallResponse>? callResponses,
+		IList<CallResponse>? callResponses,
 		string? symbol);
 
 	/// <summary>
@@ -45,7 +57,7 @@ public interface IFlow
 	/// <param name="decisionList"></param>
 	/// <param name="results"></param>
 	void Backtest(
-		IDictionary<string, IList<OlhcvDatapoint>> screenedData,
+		IDictionary<string, ScreenedDatapoint> screenedData,
 		out IList<CallResponse> decisionList,
 		out IList<object> results);
 

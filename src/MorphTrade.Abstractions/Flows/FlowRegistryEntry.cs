@@ -23,4 +23,9 @@ public class FlowRegistryEntry
 	/// Status of the flow running.
 	/// </summary>
 	public FlowStatus? Status { get; set; }
+
+	/// <summary>
+	/// An attached execution context.
+	/// </summary>
+	public FlowExecutionContext? Context { get; set; }
 }

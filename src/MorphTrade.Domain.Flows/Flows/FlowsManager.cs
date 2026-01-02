@@ -16,7 +16,6 @@ public class FlowsManager: BackgroundService
 	private readonly ILogger<FlowsManager> _logger;
 	private readonly IServiceScopeFactory _serviceScopeFactory;
 	private readonly IFlowsRepository _flowsRepository;
-	private readonly List<Task> _runningFlows;
 	private readonly IHostApplicationLifetime _hostApplicationLifetime;
 
 	///  <summary>
@@ -36,7 +35,6 @@ public class FlowsManager: BackgroundService
 		_flowsRepository = flowsRepository;
 		_logger = logger;
 		_serviceScopeFactory = scopeFactory;
-		_runningFlows = new List<Task>();
 		_hostApplicationLifetime = applicationLifetime;
 	}
 
@@ -106,13 +104,23 @@ public class FlowsManager: BackgroundService
 		flowMetadata.StatusDescription = "Operation started";
 		flowMetadata.LastUpdated = DateTime.UtcNow;
 
+		// Set the execution context information to be injected into the internal services.
+		SetExecutionContext(entry, flowMetadata);
+
 		await _flowsRepository.CreateUpdateFlowAsync(flowMetadata);
 
 		// Start the flow
 		try
 		{
 			_logger.LogInformation("Starting flow {flow}", entry.Flow.GetFlowInstanceName());
-			await entry.Flow.ExecuteAsync(stoppingToken);
+			if (entry.Context is not null)
+			{
+				await entry.Flow.ExecuteAsync(entry.Context, stoppingToken);
+			}
+			else
+			{
+				await entry.Flow.ExecuteAsync(stoppingToken);
+			}
 		}
 		catch (OperationCanceledException)
 		{
@@ -121,6 +129,10 @@ public class FlowsManager: BackgroundService
 			flowMetadata.Status = entry.Status;
 			flowMetadata.StatusDescription = "Operation cancelled";
 			flowMetadata.LastUpdated = DateTime.UtcNow;
+
+			// Set the execution context information to be injected into the internal services.
+			SetExecutionContext(entry, flowMetadata);
+
 			await _flowsRepository.CreateUpdateFlowAsync(flowMetadata);
 		}
 		catch (Exception ex)
@@ -130,6 +142,10 @@ public class FlowsManager: BackgroundService
 			flowMetadata.Status = entry.Status;
 			flowMetadata.StatusDescription = ex.Message;
 			flowMetadata.LastUpdated = DateTime.UtcNow;
+
+			// Set the execution context information to be injected into the internal services.
+			SetExecutionContext(entry, flowMetadata);
+
 			await _flowsRepository.CreateUpdateFlowAsync(flowMetadata);
 			await base.StopAsync(stoppingToken);
 		}
@@ -160,6 +176,10 @@ public class FlowsManager: BackgroundService
 		flowMetadata.Status = entry.Status;
 		flowMetadata.StatusDescription = "Operation stopped";
 		flowMetadata.LastUpdated = DateTime.UtcNow;
+
+		// Set the execution context information to be injected into the internal services.
+		SetExecutionContext(entry, flowMetadata);
+
 		await _flowsRepository.CreateUpdateFlowAsync(flowMetadata);
 	}
 
@@ -172,8 +192,7 @@ public class FlowsManager: BackgroundService
 
 		foreach (FlowRegistryEntry registryEntry in flowRegistry.Flows)
 		{
-			var task = Task.Run(() => StartFlow(registryEntry.Flow, registryEntry.TokenSource.Token), stoppingToken);
-			_runningFlows.Add(task);
+			Task.Run(() => StartFlow(registryEntry.Flow, registryEntry.TokenSource.Token), stoppingToken);
 		}
 
 		return Task.CompletedTask;
@@ -195,5 +214,20 @@ public class FlowsManager: BackgroundService
 		_logger.LogInformation("FlowsManager stopped.");
 		await base.StopAsync(stoppingToken);
 		_hostApplicationLifetime.StopApplication();
+	}
+
+	private void SetExecutionContext(
+		FlowRegistryEntry entry,
+		FlowMeta flowMetadata)
+	{
+		FlowExecutionContext executionContext = entry.Context ?? new FlowExecutionContext()
+		{
+			CancellationToken = entry.TokenSource.Token,
+		};
+
+		// Add the metadata as an execution context.
+		executionContext.Set(flowMetadata);
+
+		entry.Context = executionContext;
 	}
 }

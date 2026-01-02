@@ -45,8 +45,24 @@ public interface IFlowsRepository
 	public Task<CallResponseEvent?> AddCallResponseAsync(
 		FlowMeta flow,
 		CallResponse callResponse,
-		bool isBacktesting = false
-		);
+		bool isBacktesting = false);
+
+	/// <summary>
+	/// Allows creating and updating an existing CallResponse event based on the
+	///		- Timestamp
+	///		- Executing flow
+	///		- IsBacktesting
+	///		- Common symbol
+	///		- Common Trade Call
+	/// </summary>
+	/// <param name="flow"></param>
+	/// <param name="callResponse"></param>
+	/// <param name="isBacktesting"></param>
+	/// <returns></returns>
+	public Task<CallResponseEvent?> CreateUpdateCallResponseEventAsync(
+		FlowMeta flow,
+		CallResponse callResponse,
+		bool isBacktesting = false);
 
 	/// <summary>
 	/// Provides all Call response events.

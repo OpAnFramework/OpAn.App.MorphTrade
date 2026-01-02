@@ -15,7 +15,7 @@ namespace OpAn.App.MorphTrade.Domain.Flows;
 /// </summary>
 public static class FlowsDomainExtension
 {
-	private static IFlowRegistry _flowRegistry = new FlowRegistry();
+	private static readonly IFlowRegistry FlowRegistry = new FlowRegistry();
 	/// <summary>
 	/// Allows adding the flows domain to the service container.
 	/// </summary>
@@ -30,7 +30,7 @@ public static class FlowsDomainExtension
 		IConfigurationSection? managerOptions = configuration
 			.GetSection(nameof(FlowManagerOptions));
 
-		FlowManagerOptions? flowManagerOptions = managerOptions?.Get<FlowManagerOptions>();
+		FlowManagerOptions? flowManagerOptions = managerOptions.Get<FlowManagerOptions>();
 		if (flowManagerOptions is not null)
 		{
 			services.Configure<FlowManagerOptions>(options =>
@@ -58,17 +58,11 @@ public static class FlowsDomainExtension
 		{
 			var cts = new CancellationTokenSource();
 			services.AddScoped<EmaCrossoverSimpleFlow>();
-			services.Configure<EmaCrossoverSimpleOptions>(options =>
-			{
-				options.Identifier = emaCrossoverSimpleOptions.Identifier;
-				options.FasterIndicatorEmaCount = emaCrossoverSimpleOptions.FasterIndicatorEmaCount;
-				options.TickerInformation = emaCrossoverSimpleOptions.TickerInformation;
-				options.SlowerIndicatorEmaCount = emaCrossoverSimpleOptions.SlowerIndicatorEmaCount;
-			});
+			services.AddSingleton(Options.Create(emaCrossoverSimpleOptions));
 
 			// Register the service to the service registry
 			ServiceProvider serviceProvider = services.BuildServiceProvider();
-			_flowRegistry.Register(
+			FlowRegistry.Register(
 				new FlowRegistryEntry()
 				{
 					TokenSource = cts,
@@ -77,7 +71,7 @@ public static class FlowsDomainExtension
 				});
 		}
 
-		services.AddSingleton(_flowRegistry);
+		services.AddSingleton(FlowRegistry);
 		return services;
 	}
 

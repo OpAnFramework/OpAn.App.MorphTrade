@@ -9,7 +9,6 @@ namespace OpAn.App.MorphTrade.Domain.Flows.Entities;
 /// Records Call Responses as an event in the timeseries database.
 /// </summary>
 [Hypertable(nameof(Timestamp), ChunkTimeInterval = "86400000")] // 1 day in milliseconds
-[PrimaryKey(nameof(Id), nameof(Timestamp))]
 public class CallResponseEvent: Entity
 {
 	/// <summary>
