@@ -11,6 +11,9 @@ public class CallResponseEventConfiguration : IEntityTypeConfiguration<CallRespo
 	/// <inheritdoc />
 	public void Configure(EntityTypeBuilder<CallResponseEvent> builder)
 	{
+		// Configure the composite primary key
+		builder.HasKey(e => new {e.Id, e.Timestamp});
+
 		builder.Property(e => e.FlowId).IsRequired().HasMaxLength(100);
 		builder.HasOne(e => e.Flow)
 			.WithMany()

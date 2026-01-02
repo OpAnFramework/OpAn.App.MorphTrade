@@ -8,6 +8,12 @@ namespace OpAn.App.MorphTrade.Domain.Flows.Repositories;
 public interface IFlowsRepository
 {
 	/// <summary>
+	/// Provides all the flows registered.
+	/// </summary>
+	/// <returns></returns>
+	public Task<IList<FlowMeta>?> GetAllFlowsAsync();
+
+	/// <summary>
 	/// Provides the flow with an identifier.
 	/// </summary>
 	/// <param name="id">Identifier to be matched.</param>

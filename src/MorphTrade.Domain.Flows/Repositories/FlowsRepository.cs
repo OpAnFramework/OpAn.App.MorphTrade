@@ -27,6 +27,13 @@ public class FlowsRepository: IFlowsRepository
 	}
 
 	/// <inheritdoc />
+	public async Task<IList<FlowMeta>?> GetAllFlowsAsync()
+	{
+		_logger.LogDebug("Retrieving all flows");
+		return await _flowsDbContext.Flows.ToListAsync();
+	}
+
+	/// <inheritdoc />
 	public async Task<FlowMeta?> GetFlowByIdAsync(string id)
 	{
 		_logger.LogDebug("Retrieving flow with ID: {ID}", id);

@@ -15,9 +15,22 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Configuration" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+        <PackageReference Include="Moq" />
         <PackageReference Include="Testcontainers" />
         <PackageReference Include="Testcontainers.PostgreSql" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\MorphTrade.Domain.Flows\MorphTrade.Domain.Flows.csproj" />
+      <ProjectReference Include="..\..\src\MorphTrade.Infrastructure.Persistence\MorphTrade.Infrastructure.Persistence.csproj" />
+    </ItemGroup>
+	
+	<ItemGroup>
+		<None Update="flowsmanageroptions.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

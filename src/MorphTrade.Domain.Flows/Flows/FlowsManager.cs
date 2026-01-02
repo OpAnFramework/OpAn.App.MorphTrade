@@ -16,7 +16,7 @@ public class FlowsManager: BackgroundService
 	private readonly ILogger<FlowsManager> _logger;
 	private readonly IServiceScopeFactory _serviceScopeFactory;
 	private readonly IFlowsRepository _flowsRepository;
-	private readonly IHostApplicationLifetime _hostApplicationLifetime;
+	private readonly IHostApplicationLifetime? _hostApplicationLifetime;
 
 	///  <summary>
 	/// 	Flow manager constructor.
@@ -36,6 +36,23 @@ public class FlowsManager: BackgroundService
 		_logger = logger;
 		_serviceScopeFactory = scopeFactory;
 		_hostApplicationLifetime = applicationLifetime;
+	}
+
+	///  <summary>
+	/// 	Flow manager constructor for unit testing.
+	///  </summary>
+	///  <param name="scopeFactory">Injected service scope factory.</param>
+	///  <param name="logger">Injected logger.</param>
+	///  <param name="flowsRepository">Injected flow repository.</param>
+	public FlowsManager(
+		IServiceScopeFactory scopeFactory,
+		ILogger<FlowsManager> logger,
+		IFlowsRepository flowsRepository
+		)
+	{
+		_flowsRepository = flowsRepository;
+		_logger = logger;
+		_serviceScopeFactory = scopeFactory;
 	}
 
 	/// <summary>
@@ -221,7 +238,7 @@ public class FlowsManager: BackgroundService
 
 		_logger.LogInformation("FlowsManager stopped.");
 		await base.StopAsync(stoppingToken);
-		_hostApplicationLifetime.StopApplication();
+		_hostApplicationLifetime!.StopApplication();
 	}
 
 	private void SetExecutionContext(
