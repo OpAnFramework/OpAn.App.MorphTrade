@@ -17,12 +17,12 @@ public abstract class FlowBase: IFlow
 	/// <summary>
 	/// Execution context for the flow.
 	/// </summary>
-	public virtual FlowExecutionContext? FlowExecutionContext {get; set;}
+	protected virtual FlowExecutionContext? FlowExecutionContext {get; set;}
 
 	/// <summary>
 	/// Checks if it backtesting is being performed.
 	/// </summary>
-	public virtual bool IsBacktesting { get; set; } = false;
+	protected bool IsBacktesting { get; set; } = false;
 
 	/// <inheritdoc />
 	public abstract string Name { get; set; }
@@ -30,7 +30,7 @@ public abstract class FlowBase: IFlow
 	/// <summary>
 	/// Screened datapoints at the time of execution.
 	/// </summary>
-	public abstract IDictionary<string, ScreenedDatapoint> ScreenDatapoints { get; }
+	protected abstract IDictionary<string, ScreenedDatapoint> ScreenDatapoints { get; }
 
 	/// <summary>
 	/// Constructor for the base class.
@@ -46,7 +46,10 @@ public abstract class FlowBase: IFlow
 	}
 
 	/// <inheritdoc />
-	public string GetFlowInstanceName() => Name;
+	public string GetFlowInstanceName()
+	{
+		return $"{Name}_{_options.Value.Identifier}";
+	}
 
 	/// <inheritdoc />
 	public virtual async Task ExecuteAsync(CancellationToken cancellationToken = default)
@@ -136,12 +139,12 @@ public abstract class FlowBase: IFlow
 	/// Generate screened datapoints.
 	/// </summary>
 	/// <returns></returns>
-	public abstract Task<bool> GenerateScreenedDatapoints();
+	protected abstract Task<bool> GenerateScreenedDatapoints();
 
 	/// <summary>
 	/// Update the necessary indicators required the flow.
 	/// </summary>
 	/// <param name="datapoints">Locally stored datapoints.</param>
 	/// <returns></returns>
-	public abstract void UpdateIndicators(IList<OlhcvDatapoint> datapoints);
+	protected abstract void UpdateIndicators(IList<OlhcvDatapoint> datapoints);
 }

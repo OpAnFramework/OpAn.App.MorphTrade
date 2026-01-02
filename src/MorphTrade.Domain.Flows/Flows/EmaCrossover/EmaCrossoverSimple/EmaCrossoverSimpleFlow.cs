@@ -13,7 +13,7 @@ namespace OpAn.App.MorphTrade.Domain.Flows.Flows.EmaCrossover.EmaCrossoverSimple
 /// A simple EMA crossover flow uses fast moving and slow moving EMA indicators.
 ///		The crossover provides a change of trend.
 /// </summary>
-public class EmaCrossoverSimpleFlow: IFlow
+public class EmaCrossoverSimpleFlow: FlowBase
 {
 	private readonly EmaCrossoverSimpleOptions _options;
 	private readonly ILogger<EmaCrossoverSimpleFlow> _logger;
@@ -22,14 +22,10 @@ public class EmaCrossoverSimpleFlow: IFlow
 	private bool? _isHolding, _isBought, _isClosed;
 	private IEnumerable<EmaResult>? _slowEmaResult, _fastEmaResult;
 	private readonly IDataVendor _dataVendor;
-	private FlowExecutionContext? _executionContext;
-	private readonly IDictionary<string, ScreenedDatapoint> _screenedDatapoints
-		= new Dictionary<string, ScreenedDatapoint>();
 
 	private readonly IDictionary<string, DateTime> _lastProcessedTimestamps = new Dictionary<string, DateTime>();
 
 	// Backtesting parameters
-	private bool _isBacktesting;
 	private int _backtestingCurrentIndex;
 
 	/// <summary>
@@ -45,7 +41,7 @@ public class EmaCrossoverSimpleFlow: IFlow
 			ILogger<EmaCrossoverSimpleFlow> logger,
 			IDataVendor dataVendor,
 			ITrader trader,
-			IFlowsRepository flowsRepository)
+			IFlowsRepository flowsRepository): base(options, logger)
 	{
 		_options = options.Value;
 		_logger = logger;
@@ -58,78 +54,14 @@ public class EmaCrossoverSimpleFlow: IFlow
 	}
 
 	/// <inheritdoc />
-	public string Name { get; set; } = nameof(EmaCrossoverSimpleFlow);
+	public override string Name { get; set; } = nameof(EmaCrossoverSimpleFlow);
 
 	/// <inheritdoc />
-	public string GetFlowInstanceName()
-	{
-		return $"{Name}_{_options.Identifier}";
-	}
+	protected override IDictionary<string, ScreenedDatapoint> ScreenDatapoints { get; }
+		= new Dictionary<string, ScreenedDatapoint>();
 
 	/// <inheritdoc />
-	public async Task ExecuteAsync(CancellationToken cancellationToken = default)
-	{
-		if (_options.BacktestPrecheck)
-		{
-			_isBacktesting = true;
-			_logger.LogInformation("Backtesting started");
-			bool isDataFresh = await GenerateScreenedDatapoints();
-			if (isDataFresh)
-			{
-				Backtest(
-					_screenedDatapoints,
-					out var _,
-					out var _);
-			}
-			_isBacktesting = false;
-		}
-
-		while (!cancellationToken.IsCancellationRequested)
-		{
-			// Get the historic data and current value.
-			bool isDataFresh = await GenerateScreenedDatapoints();
-			if (isDataFresh)
-			{
-				_logger.LogInformation(
-					"{Flow} : Generated new datapoints at {Timestamp}",
-					GetFlowInstanceName(),
-					DateTime.Now);
-			}
-
-			// Execute each flow in the given time.
-			foreach (KeyValuePair<string, ScreenedDatapoint> historicData in _screenedDatapoints)
-			{
-				if (historicData.Value.IsFresh)
-				{
-					_logger.LogInformation(
-						"{Flow} : Executing the decision strategy {Timestamp}",
-						GetFlowInstanceName(),
-						DateTime.Now);
-					UpdateIndicators(historicData.Value.Datapoints);
-					// Execute the live data
-					await ExecuteLive(
-						historicData.Value.Datapoints,
-						historicData.Value.Datapoints.Last(),
-						null,
-						historicData.Key
-					);
-				}
-			}
-			await Task.Delay(_options.Interval, cancellationToken);
-		}
-	}
-
-	/// <inheritdoc />
-	public async Task ExecuteAsync(
-		FlowExecutionContext context,
-		CancellationToken cancellationToken = default)
-	{
-		_executionContext = context;
-		await ExecuteAsync(cancellationToken);
-	}
-
-	/// <inheritdoc />
-	public async Task ExecuteLive(
+	public override async Task ExecuteLive(
 		IList<OlhcvDatapoint> datapoints,
 		OlhcvDatapoint currentDatapoint,
 		IList<CallResponse>? callResponses,
@@ -144,10 +76,10 @@ public class EmaCrossoverSimpleFlow: IFlow
 		*/
 
 		var executionTime = currentDatapoint.Timestamp;
-		EmaResult slowEmaResult = _isBacktesting
+		EmaResult slowEmaResult = IsBacktesting
 			? _slowEmaResult!.ElementAt(_backtestingCurrentIndex)
 			: _slowEmaResult!.Last();
-		EmaResult fastEmaResult = _isBacktesting
+		EmaResult fastEmaResult = IsBacktesting
 			? _fastEmaResult!.ElementAt(_backtestingCurrentIndex)
 			: _fastEmaResult!.Last();
 
@@ -184,13 +116,13 @@ public class EmaCrossoverSimpleFlow: IFlow
 				if (isPurchased)
 				{
 					if (callResponses is not null) callResponses.Add(callResponse);
-					if (_executionContext is not null)
+					if (FlowExecutionContext is not null)
 					{
-						FlowMeta metadata = _executionContext.GetRequired<FlowMeta>();
+						FlowMeta metadata = FlowExecutionContext.GetRequired<FlowMeta>();
 						await _flowsRepository.CreateUpdateCallResponseEventAsync(
 							metadata,
 							callResponse,
-							_isBacktesting);
+							IsBacktesting);
 					}
 				}
 
@@ -233,13 +165,13 @@ public class EmaCrossoverSimpleFlow: IFlow
 				if (isPurchased)
 				{
 					if (callResponses is not null) callResponses.Add(callResponse);
-					if (_executionContext is not null)
+					if (FlowExecutionContext is not null)
 					{
-						FlowMeta metadata = _executionContext.GetRequired<FlowMeta>();
+						FlowMeta metadata = FlowExecutionContext.GetRequired<FlowMeta>();
 						await _flowsRepository.CreateUpdateCallResponseEventAsync(
 							metadata,
 							callResponse,
-							_isBacktesting);
+							IsBacktesting);
 					}
 				}
 
@@ -257,7 +189,7 @@ public class EmaCrossoverSimpleFlow: IFlow
 	/// This batching schema is inspired from the Quantization mechanisms of Nyquist Criteria.
 	/// N_batch = 5*min(N_ema_fast, N_ema_slow)
 	/// </remarks>
-	public void Backtest(
+	public override void Backtest(
 		IDictionary<string, ScreenedDatapoint> screenedData,
 		out IList<CallResponse> decisionList,
 		out IList<object> results)
@@ -339,7 +271,8 @@ public class EmaCrossoverSimpleFlow: IFlow
 		_logger.LogInformation($"Finished backtest: {nameof(EmaCrossoverSimpleFlow)}");
 	}
 
-	private async Task<bool> GenerateScreenedDatapoints()
+	/// <inheritdoc />
+	protected override async Task<bool> GenerateScreenedDatapoints()
 	{
 		bool isFresh = false;
 		foreach (string symbolString in _options.ScreenedSymbols!)
@@ -355,7 +288,7 @@ public class EmaCrossoverSimpleFlow: IFlow
 			var olhcvData = await _dataVendor.GetOlhcvData(
 				index,
 				tickerSymbol,
-				_isBacktesting ? _options.BacktestObservationTime : DateTime.UtcNow,
+				IsBacktesting ? _options.BacktestObservationTime : DateTime.UtcNow,
 				_options.ObservationPeriod,
 				_options.Timeframe);
 
@@ -370,21 +303,19 @@ public class EmaCrossoverSimpleFlow: IFlow
 
 			if (isSymbolDataFresh)
 			{
-				_screenedDatapoints.TryGetValue(symbolString, out ScreenedDatapoint? screenedDatapoint);
+				ScreenDatapoints.TryGetValue(symbolString, out ScreenedDatapoint? screenedDatapoint);
 				// Prevents memory overflow.
 				screenedDatapoint ??= new ScreenedDatapoint
 				{
 					Datapoints = olhcvData,
 					IsFresh = isSymbolDataFresh
 				};
-
 				screenedDatapoint.Datapoints = olhcvData;
-				_screenedDatapoints[symbolString] = screenedDatapoint;
-
+				ScreenDatapoints[symbolString] = screenedDatapoint;
 			}
 			else
 			{
-				_screenedDatapoints.TryGetValue(symbolString, out ScreenedDatapoint? screenedDatapoint);
+				ScreenDatapoints.TryGetValue(symbolString, out ScreenedDatapoint? screenedDatapoint);
 				screenedDatapoint!.IsFresh = isSymbolDataFresh;
 			}
 
@@ -394,7 +325,8 @@ public class EmaCrossoverSimpleFlow: IFlow
 		return isFresh;
 	}
 
-	private void UpdateIndicators(IList<OlhcvDatapoint> datapoints)
+	/// <inheritdoc />
+	protected override void UpdateIndicators(IList<OlhcvDatapoint> datapoints)
 	{
 		// Convert datapoints to Skender quotes
 		IEnumerable<MorphQuote> quotes = datapoints.Select(x => (MorphQuote)x);
@@ -403,6 +335,4 @@ public class EmaCrossoverSimpleFlow: IFlow
 		_fastEmaResult = morphQuotes.GetEma(_options.FasterIndicatorEmaCount).ToList();
 
 	}
-
-	private int GetEpochTime(DateTime dateTime) => (int) (dateTime - new DateTime(1970, 1, 1)).TotalSeconds;
 }
