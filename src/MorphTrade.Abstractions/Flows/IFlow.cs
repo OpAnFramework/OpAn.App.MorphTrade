@@ -60,10 +60,4 @@ public interface IFlow
 		IDictionary<string, ScreenedDatapoint> screenedData,
 		out IList<CallResponse> decisionList,
 		out IList<object> results);
-
-	// TODO: Add a backtest parameter overload for the live data tenant
-	/// <summary>
-	/// Adds a live backtesting mechanism to the flow.
-	/// </summary>
-	Task BacktestLive(CancellationToken cancellationToken = default);
 }

@@ -78,13 +78,12 @@ public class EmaCrossoverSimpleFlow: IFlow
 			{
 				Backtest(
 					_screenedDatapoints,
-					out var decisionList,
-					out var results);
+					out var _,
+					out var _);
 			}
 			_isBacktesting = false;
 		}
 
-		_logger.LogInformation("EmaCrossoverSimpleFlow started");
 		while (!cancellationToken.IsCancellationRequested)
 		{
 			// Get the historic data and current value.
@@ -338,17 +337,6 @@ public class EmaCrossoverSimpleFlow: IFlow
 				GetFlowInstanceName(), instrumentSymbol);
 		}
 		_logger.LogInformation($"Finished backtest: {nameof(EmaCrossoverSimpleFlow)}");
-	}
-
-	/// <inheritdoc />
-	public async Task BacktestLive(CancellationToken cancellationToken = default)
-	{
-		_logger.LogInformation("Starting backtest: {NAME}", Name);
-		while (!cancellationToken.IsCancellationRequested)
-		{
-			_logger.LogInformation("Running the backtest");
-			await Task.Delay(1000, cancellationToken);
-		}
 	}
 
 	private async Task<bool> GenerateScreenedDatapoints()
