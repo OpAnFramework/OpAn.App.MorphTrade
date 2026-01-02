@@ -4,7 +4,6 @@ using OpAn.App.MorphTrade.Abstractions.Core;
 using OpAn.App.MorphTrade.Abstractions.Finance;
 using OpAn.App.MorphTrade.Abstractions.Flows;
 using OpAn.App.MorphTrade.Abstractions.IngestionDomain;
-using OpAn.App.MorphTrade.Domain.Flows.Entities;
 using OpAn.App.MorphTrade.Domain.Flows.Repositories;
 using Skender.Stock.Indicators;
 
@@ -18,7 +17,6 @@ public class EmaCrossoverSimpleFlow: FlowBase
 	private readonly EmaCrossoverSimpleOptions _options;
 	private readonly ILogger<EmaCrossoverSimpleFlow> _logger;
 	private readonly ITrader _trader;
-	private readonly IFlowsRepository _flowsRepository;
 	private bool? _isHolding, _isBought, _isClosed;
 	private IEnumerable<EmaResult>? _slowEmaResult, _fastEmaResult;
 	private readonly IDataVendor _dataVendor;
@@ -41,12 +39,14 @@ public class EmaCrossoverSimpleFlow: FlowBase
 			ILogger<EmaCrossoverSimpleFlow> logger,
 			IDataVendor dataVendor,
 			ITrader trader,
-			IFlowsRepository flowsRepository): base(options, logger)
+			IFlowsRepository flowsRepository): base(
+		options,
+		logger,
+		flowsRepository)
 	{
 		_options = options.Value;
 		_logger = logger;
 		_dataVendor = dataVendor;
-		_flowsRepository = flowsRepository;
 		_trader = trader;
 		_isHolding = null;
 		_isBought = null;
@@ -115,15 +115,7 @@ public class EmaCrossoverSimpleFlow: FlowBase
 
 				if (isPurchased)
 				{
-					if (callResponses is not null) callResponses.Add(callResponse);
-					if (FlowExecutionContext is not null)
-					{
-						FlowMeta metadata = FlowExecutionContext.GetRequired<FlowMeta>();
-						await _flowsRepository.CreateUpdateCallResponseEventAsync(
-							metadata,
-							callResponse,
-							IsBacktesting);
-					}
+					await RegisterCallResponse(callResponse, callResponses);
 				}
 
 				// Set conditions:
@@ -164,15 +156,7 @@ public class EmaCrossoverSimpleFlow: FlowBase
 
 				if (isPurchased)
 				{
-					if (callResponses is not null) callResponses.Add(callResponse);
-					if (FlowExecutionContext is not null)
-					{
-						FlowMeta metadata = FlowExecutionContext.GetRequired<FlowMeta>();
-						await _flowsRepository.CreateUpdateCallResponseEventAsync(
-							metadata,
-							callResponse,
-							IsBacktesting);
-					}
+					await RegisterCallResponse(callResponse, callResponses);
 				}
 
 				// Set conditions:
@@ -285,20 +269,24 @@ public class EmaCrossoverSimpleFlow: FlowBase
 				_ => (string.Empty, string.Empty)
 			};
 
-			var olhcvData = await _dataVendor.GetOlhcvData(
+			bool isSymbolDataFresh = false;
+			IList<OlhcvDatapoint>? olhcvData = null;
+			olhcvData = await _dataVendor.GetOlhcvData(
 				index,
 				tickerSymbol,
 				IsBacktesting ? _options.BacktestObservationTime : DateTime.UtcNow,
 				_options.ObservationPeriod,
 				_options.Timeframe);
 
-			bool isSymbolDataFresh = false;
-			if (
-				!_lastProcessedTimestamps.ContainsKey(symbolString)
-				|| _lastProcessedTimestamps[symbolString] < olhcvData.Last().Timestamp)
+			if (olhcvData is not null)
 			{
-				isSymbolDataFresh = true;
-				_lastProcessedTimestamps[symbolString] = olhcvData.Last().Timestamp;
+				if (
+					!_lastProcessedTimestamps.ContainsKey(symbolString)
+					|| (_lastProcessedTimestamps[symbolString] < olhcvData.Last().Timestamp))
+				{
+					isSymbolDataFresh = true;
+					_lastProcessedTimestamps[symbolString] = olhcvData.Last().Timestamp;
+				}
 			}
 
 			if (isSymbolDataFresh)
@@ -307,10 +295,10 @@ public class EmaCrossoverSimpleFlow: FlowBase
 				// Prevents memory overflow.
 				screenedDatapoint ??= new ScreenedDatapoint
 				{
-					Datapoints = olhcvData,
+					Datapoints = olhcvData ?? new List<OlhcvDatapoint>(),
 					IsFresh = isSymbolDataFresh
 				};
-				screenedDatapoint.Datapoints = olhcvData;
+				screenedDatapoint.Datapoints = olhcvData!;
 				ScreenDatapoints[symbolString] = screenedDatapoint;
 			}
 			else

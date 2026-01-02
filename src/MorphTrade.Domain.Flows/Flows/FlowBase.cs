@@ -3,6 +3,8 @@ using Microsoft.Extensions.Options;
 using OpAn.App.MorphTrade.Abstractions.Core;
 using OpAn.App.MorphTrade.Abstractions.Flows;
 using OpAn.App.MorphTrade.Abstractions.IngestionDomain;
+using OpAn.App.MorphTrade.Domain.Flows.Entities;
+using OpAn.App.MorphTrade.Domain.Flows.Repositories;
 
 namespace OpAn.App.MorphTrade.Domain.Flows.Flows;
 
@@ -13,6 +15,7 @@ public abstract class FlowBase: IFlow
 {
 	private readonly IOptions<FlowOptions> _options;
 	private readonly ILogger<FlowBase> _logger;
+	private readonly IFlowsRepository _flowsRepository;
 
 	/// <summary>
 	/// Execution context for the flow.
@@ -22,7 +25,7 @@ public abstract class FlowBase: IFlow
 	/// <summary>
 	/// Checks if it backtesting is being performed.
 	/// </summary>
-	protected bool IsBacktesting { get; set; } = false;
+	protected bool IsBacktesting { get; set; }
 
 	/// <inheritdoc />
 	public abstract string Name { get; set; }
@@ -37,12 +40,15 @@ public abstract class FlowBase: IFlow
 	/// </summary>
 	/// <param name="options">Flow options for the base class.</param>
 	/// <param name="logger">Injected logger.</param>
+	/// <param name="flowsRepository">Flows repository for the flows base.</param>
 	protected FlowBase(
 		IOptions<FlowOptions> options,
-		ILogger<FlowBase> logger)
+		ILogger<FlowBase> logger,
+		IFlowsRepository flowsRepository)
 	{
 		_options = options;
 		_logger = logger;
+		_flowsRepository = flowsRepository;
 	}
 
 	/// <inheritdoc />
@@ -104,6 +110,7 @@ public abstract class FlowBase: IFlow
 					);
 				}
 			}
+			await Task.Delay(_options.Value.Interval, cancellationToken);
 		}
 	}
 
@@ -126,6 +133,27 @@ public abstract class FlowBase: IFlow
 		IDictionary<string, ScreenedDatapoint> screenedData,
 		out IList<CallResponse> decisionList,
 		out IList<object> results);
+
+	/// <summary>
+	/// Register call response to the operational memory.
+	/// </summary>
+	/// <param name="callResponse">Call response to be registered.</param>
+	/// <param name="callResponses">Appendable call response list.</param>
+	/// <returns></returns>
+	protected  async Task RegisterCallResponse(
+		CallResponse callResponse,
+		IList<CallResponse>? callResponses)
+	{
+		if (callResponses is not null) callResponses.Add(callResponse);
+		if (FlowExecutionContext is not null)
+		{
+			FlowMeta metadata = FlowExecutionContext.GetRequired<FlowMeta>();
+			await _flowsRepository.CreateUpdateCallResponseEventAsync(
+				metadata,
+				callResponse,
+				IsBacktesting);
+		}
+	}
 
 	/// <summary>
 	/// Provides an EpochTime converted for the flows.

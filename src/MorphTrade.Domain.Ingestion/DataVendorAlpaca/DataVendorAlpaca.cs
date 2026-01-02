@@ -1,7 +1,9 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 using OpAn.App.MorphTrade.Abstractions.IngestionDomain;
+using OpAn.App.MorphTrade.Abstractions.IngestionDomain.Exceptions;
 using OpAn.App.MorphTrade.Domain.Ingestion.DataVendorAlpaca.Dto;
 using OpAn.App.MorphTrade.Domain.Ingestion.DataVendorAlpaca.Http;
 using OpAn.App.MorphTrade.Domain.Ingestion.DataVendorAlpaca.Tools;
@@ -15,18 +17,22 @@ public class DataVendorAlpaca: IDataVendor
 {
 	private readonly HttpClient _client;
 	private readonly AlpacaTimeframeHelper _timeframeHelper;
+	private readonly ILogger<DataVendorAlpaca> _logger;
 
 	/// <summary>
 	/// Constructor for the Alpaca Data Vendor.
 	/// </summary>
 	/// <param name="clientFactory">HttpClientWrapper for the alpaca.</param>
 	/// <param name="timeframeHelper">Timeframe helper for the Alpaca vendor.</param>
+	/// <param name="logger">Injected logger.</param>
 	public DataVendorAlpaca(
 		IAlpacaHttpClientFactory clientFactory,
-		AlpacaTimeframeHelper timeframeHelper)
+		AlpacaTimeframeHelper timeframeHelper,
+		ILogger<DataVendorAlpaca> logger)
 	{
 		_client = clientFactory.GetClient;
 		_timeframeHelper = timeframeHelper;
+		_logger = logger;
 	}
 	/// <inheritdoc />
 	public async Task<IList<VolumeDatapoint>> GetVolume(
@@ -88,7 +94,7 @@ public class DataVendorAlpaca: IDataVendor
 	}
 
 	/// <inheritdoc />
-	public async Task<IList<OlhcvDatapoint>> GetOlhcvData(
+	public async Task<IList<OlhcvDatapoint>?> GetOlhcvData(
 		string index,
 		string stock,
 		DateTime observationTime,
@@ -104,8 +110,20 @@ public class DataVendorAlpaca: IDataVendor
 
 		AlpacaHistoricBarStockResponseDto? responseDto = await CallAlpaca(queries);
 
+		if (responseDto is null || responseDto.Bars is null || responseDto.Bars.Count == 0)
+		{
+			_logger.LogWarning("No data points returned! {ResponseDto}", responseDto);
+
+			if (responseDto!.Bars is null || responseDto.Bars.Count == 0)
+			{
+				throw new DataVendorRateLimitError("Bars not returned, probably due to high request frequency. " +
+				                                   "Please reduce the calling interval.");
+			}
+			return null;
+		}
+
 		// Convert to natively supported OLHCV data point.
-		return responseDto!
+		return responseDto
 			.Bars![stock]
 			.Select(dataPoint => new OlhcvDatapoint
 			{

@@ -89,7 +89,15 @@ public class FlowsManager: BackgroundService
 		// Get flow from the database
 		FlowMeta flowMetadata = (await _flowsRepository
 				.GetFlowsByNameAsync(flow.GetFlowInstanceName()))!
-			.FirstOrDefault()!;
+			.FirstOrDefault()
+			?? new FlowMeta
+			{
+				Id = Guid.NewGuid().ToString(),
+				Name = flow.GetFlowInstanceName(),
+				LastUpdated = DateTime.Now,
+				StatusDescription = "New flow created",
+				Status = FlowStatus.Created
+			};
 
 		// Get the registry
 		IFlowRegistry flowRegistry = serviceScope.ServiceProvider
