@@ -1,0 +1,22 @@
+{
+	"FlowManagerOptions": {
+		"Identifier": "MorphFlowManager",
+		"ManagedFlows": [
+			{
+				"Type": "EmaCrossoverSimpleFlow",
+				"Options": {
+					"Identifier": "UnitTestFlow",
+					"BacktestPrecheck": true,
+					"FasterIndicatorEmaCount": 5,
+					"SlowerIndicatorEmaCount": 22,
+					"BacktestObservationTime": "2025-10-02T14:30:00Z",
+					"ScreenedSymbols": [
+						"iex:GOLD",
+						"iex:AAPL",
+						"iex:QBTS"
+					]
+				}
+			}
+		]
+	}
+}

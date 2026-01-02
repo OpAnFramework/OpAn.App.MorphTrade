@@ -7,7 +7,7 @@ namespace OpAn.App.MorphTrade.Console.Extensions;
 /// <summary>
 /// Extends the Builder Extensions for Configuration
 /// </summary>
-public static class ConfigurationExetensions
+public static class ConfigurationExtensions
 {
 	/// <summary>
 	/// Adds the Configurations to the builder

@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <PackageReference Include="JetBrains.Annotations" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" />
       <PackageReference Include="Skender.Stock.Indicators" />
     </ItemGroup>
 

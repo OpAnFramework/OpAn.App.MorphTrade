@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MorphTrade.Domain.Finance.L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MorphTrade.Workspace.Flows.Backtests", "workspace\MorphTrade.Workspace.Flows.Backtests\MorphTrade.Workspace.Flows.Backtests.csproj", "{186A8AC8-D104-42B2-93B2-D53136C9F65A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MorphTrade.Domain.Flows.Tests", "tests\MorphTrade.Domain.Flows.Tests\MorphTrade.Domain.Flows.Tests.csproj", "{948BD3DA-9CFD-43B1-87B9-A61C14CF81FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,5 +94,9 @@ Global
 		{186A8AC8-D104-42B2-93B2-D53136C9F65A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{186A8AC8-D104-42B2-93B2-D53136C9F65A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{186A8AC8-D104-42B2-93B2-D53136C9F65A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{948BD3DA-9CFD-43B1-87B9-A61C14CF81FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{948BD3DA-9CFD-43B1-87B9-A61C14CF81FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{948BD3DA-9CFD-43B1-87B9-A61C14CF81FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{948BD3DA-9CFD-43B1-87B9-A61C14CF81FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

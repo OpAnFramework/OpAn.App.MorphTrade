@@ -31,6 +31,6 @@ internal class Program
 
 		var services = builder.Services.BuildServiceProvider();
 
-		services.GetService<IFlow>()!.Execute();
+		services.GetService<IFlow>()!.ExecuteAsync();
 	}
 }

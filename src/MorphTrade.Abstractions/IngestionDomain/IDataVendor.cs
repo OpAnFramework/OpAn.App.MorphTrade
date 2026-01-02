@@ -51,7 +51,7 @@ public interface IDataVendor
     /// <param name="timespan">Specified time between which data-points are subjected to analysis.</param>
     /// <param name="timeframe">Specified timeframe for each datapoint's duration.</param>
     /// <returns></returns>
-    public Task<IList<OlhcvDatapoint>> GetOlhcvData(
+    public Task<IList<OlhcvDatapoint>?> GetOlhcvData(
 	    string index,
 	    string stock,
 	    DateTime observationTime,

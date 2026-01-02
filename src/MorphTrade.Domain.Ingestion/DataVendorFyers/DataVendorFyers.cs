@@ -75,7 +75,7 @@ public class DataVendorFyers: IDataVendor
     }
 
     /// <inheritdoc />
-    public async Task<IList<OlhcvDatapoint>> GetOlhcvData(
+    public async Task<IList<OlhcvDatapoint>?> GetOlhcvData(
 	    string index,
 	    string stock,
 	    DateTime observationTime,

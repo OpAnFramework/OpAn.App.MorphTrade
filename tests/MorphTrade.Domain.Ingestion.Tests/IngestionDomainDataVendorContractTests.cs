@@ -35,7 +35,7 @@ public class IngestionDomainDataVendorContractTests
 					It.IsAny<DateTime>(),
 					It.IsAny<TimeSpan>(),
 					It.IsAny<TimeSpan>()))
-			.Returns(Task.FromResult(_mockDatapoints));
+			.Returns(Task.FromResult(_mockDatapoints)!);
 
 		IList<OlhcDatapoint> mockOlhcDatapoints = _mockDatapoints
 			.Select(x => new OlhcDatapoint
@@ -64,11 +64,11 @@ public class IngestionDomainDataVendorContractTests
 	{
 		IDataVendor dataVendor = _dataVendorMock.Object;
 		Assert.AreEqual(_mockDatapoints[0].Timestamp, dataVendor.GetOlhcvData(
-				"x",
-				"x",
-				DateTime.Now,
-				TimeSpan.MinValue,
-				TimeSpan.MinValue
-			).Result[0].Timestamp);
+			"x",
+			"x",
+			DateTime.Now,
+			TimeSpan.MinValue,
+			TimeSpan.MinValue
+		).Result![0].Timestamp);
 	}
 }

@@ -10,7 +10,7 @@ using OpAn.App.MorphTrade.Abstractions.Flows;
 using OpAn.App.MorphTrade.Abstractions.IngestionDomain;
 using OpAn.App.MorphTrade.Console.Extensions;
 using OpAn.App.MorphTrade.Domain.Finance.Trader;
-using OpAn.App.MorphTrade.Domain.Flows.EmaCrossover.EmaCrossoverSimple;
+using OpAn.App.MorphTrade.Domain.Flows.Flows.EmaCrossover.EmaCrossoverSimple;
 using OpAn.App.MorphTrade.Workspace.Flows.Backtests.Extensions;
 
 namespace OpAn.App.MorphTrade.Workspace.Flows.Backtests;
@@ -56,10 +56,10 @@ internal class Program
 			{"DEFAULT_EXCHANGE:SAMPLE_DATA", services.GetService<IList<OlhcvDatapoint>>()!}
 		};
 
-		services.GetService<IFlow>()!.Backtest(
-			screenedDatapoints,
-			out IList<CallResponse> decisionList,
-			out IList<object> backtestResults);
+		//services.GetService<IFlow>()!.Backtest(
+		//	screenedDatapoints,
+		//	out IList<CallResponse> decisionList,
+		//	out IList<object> backtestResults);
 
 		var jsonOptions = new JsonSerializerOptions
 		{
@@ -70,8 +70,8 @@ internal class Program
 			}
 		};
 
-		string decisionListJson = JsonSerializer.Serialize(decisionList, jsonOptions);
-		string backtestResultsJson = JsonSerializer.Serialize(backtestResults, jsonOptions);
+		//string decisionListJson = JsonSerializer.Serialize(decisionList, jsonOptions);
+		//string backtestResultsJson = JsonSerializer.Serialize(backtestResults, jsonOptions);
 
 		string resultsDir = builder
 			.Configuration
@@ -81,7 +81,7 @@ internal class Program
 			.Combine(resultsDir, DateTime.Now.ToString("yyyy-MM-ddTHH-mm"));
 		Directory.CreateDirectory(resultsPrefix);
 
-		File.WriteAllText(Path.Combine(resultsPrefix, "decisionList.json"), decisionListJson);
-		File.WriteAllText(Path.Combine(resultsPrefix, "backtestResults.json"), backtestResultsJson);
+		//File.WriteAllText(Path.Combine(resultsPrefix, "decisionList.json"), decisionListJson);
+		//File.WriteAllText(Path.Combine(resultsPrefix, "backtestResults.json"), backtestResultsJson);
 	}
 }
