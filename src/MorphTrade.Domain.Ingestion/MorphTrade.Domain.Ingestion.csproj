@@ -16,6 +16,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" />
 		<PackageReference Include="Microsoft.Extensions.Options" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" />
+		<PackageReference Include="SKB.Core.Hosting" />
     </ItemGroup>
 
 </Project>

@@ -24,6 +24,7 @@
     <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="SKB.Core.EditorConfig" Version="9.0.1" />
+    <PackageVersion Include="SKB.Core.Hosting" Version="9.0.3" />
     <PackageVersion Include="skb.core.licenseconfig" Version="9.0.1" />
     <PackageVersion Include="Skender.Stock.Indicators" Version="2.7.0" />
     <PackageVersion Include="MSTest.Analyzers" Version="3.6.4" />
