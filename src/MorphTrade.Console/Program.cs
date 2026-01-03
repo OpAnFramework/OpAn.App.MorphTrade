@@ -1,21 +1,14 @@
-﻿using System.Collections;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using OpAn.App.MorphTrade.Abstractions.Finance;
-using OpAn.App.MorphTrade.Abstractions.Flows;
 using OpAn.App.MorphTrade.Console.Extensions;
 using OpAn.App.MorphTrade.Domain.Finance.Bank;
-using OpAn.App.MorphTrade.Domain.Finance.Bank.AggregateRoot;
-using OpAn.App.MorphTrade.Domain.Finance.Bank.Repositories;
 using OpAn.App.MorphTrade.Domain.Finance.Trader;
 using OpAn.App.MorphTrade.Domain.Flows;
-using OpAn.App.MorphTrade.Domain.Flows.Flows;
 using OpAn.App.MorphTrade.Domain.Ingestion.Extensions;
-using OpAn.App.MorphTrade.Infrastructure.Persistence;
 using OpAn.App.MorphTrade.Infrastructure.Persistence.Extension;
 
 namespace OpAn.App.MorphTrade.Console;
