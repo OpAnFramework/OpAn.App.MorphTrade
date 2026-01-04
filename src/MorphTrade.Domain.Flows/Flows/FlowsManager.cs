@@ -16,7 +16,6 @@ public class FlowsManager: BackgroundService
 {
 	private readonly ILogger<FlowsManager> _logger;
 	private readonly IServiceScopeFactory _serviceScopeFactory;
-	private readonly IFlowsRepository _flowsRepository;
 	private readonly IHostApplicationLifetime? _hostApplicationLifetime;
 	private readonly IUserInfo _userInfo;
 
@@ -25,18 +24,15 @@ public class FlowsManager: BackgroundService
 	///  </summary>
 	///  <param name="scopeFactory">Injected service scope factory.</param>
 	///  <param name="logger">Injected logger.</param>
-	///  <param name="flowsRepository">Injected flow repository.</param>
 	///  <param name="applicationLifetime">Injected application lifetime.</param>
 	///  <param name="userInfo">Injected user info.</param>
 	public FlowsManager(
 		IServiceScopeFactory scopeFactory,
 		ILogger<FlowsManager> logger,
-		IFlowsRepository flowsRepository,
 		IHostApplicationLifetime applicationLifetime,
 		IUserInfo userInfo
 		)
 	{
-		_flowsRepository = flowsRepository;
 		_logger = logger;
 		_serviceScopeFactory = scopeFactory;
 		_hostApplicationLifetime = applicationLifetime;
@@ -48,16 +44,13 @@ public class FlowsManager: BackgroundService
 	///  </summary>
 	///  <param name="scopeFactory">Injected service scope factory.</param>
 	///  <param name="logger">Injected logger.</param>
-	///  <param name="flowsRepository">Injected flow repository.</param>
 	///  <param name="userInfo">Injected user info.</param>
 	public FlowsManager(
 		IServiceScopeFactory scopeFactory,
 		ILogger<FlowsManager> logger,
-		IFlowsRepository flowsRepository,
 		IUserInfo userInfo
 		)
 	{
-		_flowsRepository = flowsRepository;
 		_logger = logger;
 		_serviceScopeFactory = scopeFactory;
 		_userInfo = userInfo;
@@ -84,9 +77,11 @@ public class FlowsManager: BackgroundService
 	/// <returns></returns>
 	public async Task<IFlow> CreateFlow(IFlow flow)
 	{
+		using var scope = _serviceScopeFactory.CreateScope();
+		var flowsRepository = scope.ServiceProvider.GetRequiredService<IFlowsRepository>();
 		// Find if the flow already exists on the database or not.
 		FlowMeta? existingFlowMetadata = (
-				await _flowsRepository
+				await flowsRepository
 				.GetFlowsByNameAsync(flow.GetFlowInstanceName()))!
 			.FirstOrDefault();
 		FlowMeta targetFlowMetadata = existingFlowMetadata ?? new FlowMeta()
@@ -99,7 +94,7 @@ public class FlowsManager: BackgroundService
 		};
 
 		_logger.LogInformation("Creating new flow {flow}", flow);
-		await _flowsRepository.CreateUpdateFlowAsync(targetFlowMetadata);
+		await flowsRepository.CreateUpdateFlowAsync(targetFlowMetadata);
 		return flow;
 	}
 
@@ -111,9 +106,10 @@ public class FlowsManager: BackgroundService
 	/// <returns></returns>
 	private async Task StartFlow(IFlow flow, CancellationToken stoppingToken)
 	{
-		var serviceScope = _serviceScopeFactory.CreateScope();
+		using var serviceScope = _serviceScopeFactory.CreateScope();
+		var flowsRepository = serviceScope.ServiceProvider.GetRequiredService<IFlowsRepository>();
 		// Get flow from the database
-		FlowMeta flowMetadata = (await _flowsRepository
+		FlowMeta flowMetadata = (await flowsRepository
 				.GetFlowsByNameAsync(flow.GetFlowInstanceName()))!
 			.FirstOrDefault()
 			?? new FlowMeta
@@ -142,7 +138,7 @@ public class FlowsManager: BackgroundService
 		// Set the execution context information to be injected into the internal services.
 		SetExecutionContext(entry, flowMetadata);
 
-		await _flowsRepository.CreateUpdateFlowAsync(flowMetadata);
+		await flowsRepository.CreateUpdateFlowAsync(flowMetadata);
 
 		// Start the flow
 		try
@@ -168,7 +164,7 @@ public class FlowsManager: BackgroundService
 			// Set the execution context information to be injected into the internal services.
 			SetExecutionContext(entry, flowMetadata);
 
-			await _flowsRepository.CreateUpdateFlowAsync(flowMetadata);
+			await flowsRepository.CreateUpdateFlowAsync(flowMetadata);
 		}
 		catch (Exception ex)
 		{
@@ -181,7 +177,7 @@ public class FlowsManager: BackgroundService
 			// Set the execution context information to be injected into the internal services.
 			SetExecutionContext(entry, flowMetadata);
 
-			await _flowsRepository.CreateUpdateFlowAsync(flowMetadata);
+			await flowsRepository.CreateUpdateFlowAsync(flowMetadata);
 			await base.StopAsync(stoppingToken);
 		}
 	}
@@ -192,9 +188,10 @@ public class FlowsManager: BackgroundService
 	/// <param name="flow">Flow to be stopped.</param>
 	private async Task StopFlow(IFlow flow)
 	{
-		var serviceScope = _serviceScopeFactory.CreateScope();
+		using var serviceScope = _serviceScopeFactory.CreateScope();
+		var flowsRepository = serviceScope.ServiceProvider.GetRequiredService<IFlowsRepository>();
 		// Get flow from the database
-		FlowMeta flowMetadata = (await _flowsRepository
+		FlowMeta flowMetadata = (await flowsRepository
 				.GetFlowsByNameAsync(flow.GetFlowInstanceName()))!
 			.FirstOrDefault()!;
 
@@ -215,7 +212,7 @@ public class FlowsManager: BackgroundService
 		// Set the execution context information to be injected into the internal services.
 		SetExecutionContext(entry, flowMetadata);
 
-		await _flowsRepository.CreateUpdateFlowAsync(flowMetadata);
+		await flowsRepository.CreateUpdateFlowAsync(flowMetadata);
 	}
 
 	/// <inheritdoc />
