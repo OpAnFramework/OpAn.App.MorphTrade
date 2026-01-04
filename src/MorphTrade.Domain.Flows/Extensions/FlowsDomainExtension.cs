@@ -8,7 +8,7 @@ using OpAn.App.MorphTrade.Domain.Flows.Flows.EmaCrossover.EmaCrossoverSimple;
 using OpAn.App.MorphTrade.Domain.Flows.Registries;
 using OpAn.App.MorphTrade.Domain.Flows.Repositories;
 
-namespace OpAn.App.MorphTrade.Domain.Flows;
+namespace OpAn.App.MorphTrade.Domain.Flows.Extensions;
 
 /// <summary>
 /// Allows adding the flows domain to the service container.

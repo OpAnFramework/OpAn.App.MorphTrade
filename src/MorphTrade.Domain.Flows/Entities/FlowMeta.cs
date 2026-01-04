@@ -6,7 +6,7 @@ namespace OpAn.App.MorphTrade.Domain.Flows.Entities;
 /// <summary>
 /// A flow entity that specifies meta information about the flow.
 /// </summary>
-public class FlowMeta: Entity
+public class FlowMeta: AuthorizedEntity
 {
 	/// <summary>
 	/// Name of the flow.
