@@ -4,10 +4,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpAn.App.MorphTrade.Abstractions.Finance;
+using OpAn.App.MorphTrade.Abstractions.User.Extensions;
 using OpAn.App.MorphTrade.Console.Extensions;
 using OpAn.App.MorphTrade.Domain.Finance.Bank;
 using OpAn.App.MorphTrade.Domain.Finance.Trader;
 using OpAn.App.MorphTrade.Domain.Flows;
+using OpAn.App.MorphTrade.Domain.Flows.Extensions;
 using OpAn.App.MorphTrade.Domain.Ingestion.Extensions;
 using OpAn.App.MorphTrade.Infrastructure.Persistence.Extension;
 
@@ -38,6 +40,9 @@ internal class Program
 	        System.Console.WriteLine("DataVendor not configured");
 	        return;
         }
+
+        // Add user information
+        builder.Services.EnsureUserInfo(builder.Configuration);
 
         // Add the Section for fyers data vendor
         if (builder.Configuration.GetValue<string>("DataVendor")! == "Fyers")

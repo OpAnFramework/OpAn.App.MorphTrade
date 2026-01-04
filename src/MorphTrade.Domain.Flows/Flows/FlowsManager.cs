@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpAn.App.MorphTrade.Abstractions.Core;
 using OpAn.App.MorphTrade.Abstractions.Flows;
 using OpAn.App.MorphTrade.Abstractions.Flows.Enums;
 using OpAn.App.MorphTrade.Domain.Flows.Entities;
@@ -17,6 +18,7 @@ public class FlowsManager: BackgroundService
 	private readonly IServiceScopeFactory _serviceScopeFactory;
 	private readonly IFlowsRepository _flowsRepository;
 	private readonly IHostApplicationLifetime? _hostApplicationLifetime;
+	private readonly IUserInfo _userInfo;
 
 	///  <summary>
 	/// 	Flow manager constructor.
@@ -25,17 +27,20 @@ public class FlowsManager: BackgroundService
 	///  <param name="logger">Injected logger.</param>
 	///  <param name="flowsRepository">Injected flow repository.</param>
 	///  <param name="applicationLifetime">Injected application lifetime.</param>
+	///  <param name="userInfo">Injected user info.</param>
 	public FlowsManager(
 		IServiceScopeFactory scopeFactory,
 		ILogger<FlowsManager> logger,
 		IFlowsRepository flowsRepository,
-		IHostApplicationLifetime applicationLifetime
+		IHostApplicationLifetime applicationLifetime,
+		IUserInfo userInfo
 		)
 	{
 		_flowsRepository = flowsRepository;
 		_logger = logger;
 		_serviceScopeFactory = scopeFactory;
 		_hostApplicationLifetime = applicationLifetime;
+		_userInfo = userInfo;
 	}
 
 	///  <summary>
@@ -44,15 +49,18 @@ public class FlowsManager: BackgroundService
 	///  <param name="scopeFactory">Injected service scope factory.</param>
 	///  <param name="logger">Injected logger.</param>
 	///  <param name="flowsRepository">Injected flow repository.</param>
+	///  <param name="userInfo">Injected user info.</param>
 	public FlowsManager(
 		IServiceScopeFactory scopeFactory,
 		ILogger<FlowsManager> logger,
-		IFlowsRepository flowsRepository
+		IFlowsRepository flowsRepository,
+		IUserInfo userInfo
 		)
 	{
 		_flowsRepository = flowsRepository;
 		_logger = logger;
 		_serviceScopeFactory = scopeFactory;
+		_userInfo = userInfo;
 	}
 
 	/// <summary>
@@ -83,6 +91,7 @@ public class FlowsManager: BackgroundService
 			.FirstOrDefault();
 		FlowMeta targetFlowMetadata = existingFlowMetadata ?? new FlowMeta()
 		{
+			UserId = _userInfo.UserId,
 			Id = Guid.NewGuid().ToString(),
 			Name = flow.GetFlowInstanceName(),
 			Status = FlowStatus.Created,
@@ -109,6 +118,7 @@ public class FlowsManager: BackgroundService
 			.FirstOrDefault()
 			?? new FlowMeta
 			{
+				UserId = _userInfo.UserId,
 				Id = Guid.NewGuid().ToString(),
 				Name = flow.GetFlowInstanceName(),
 				LastUpdated = DateTime.Now,

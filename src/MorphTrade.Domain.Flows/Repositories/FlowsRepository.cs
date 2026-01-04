@@ -90,6 +90,7 @@ public class FlowsRepository: IFlowsRepository
 	{
 		CallResponseEvent callResponseEvent = new CallResponseEvent()
 		{
+			UserId = flow.UserId,
 			Id = Guid.NewGuid().ToString(),
 			Ticker = callResponse.Ticker,
 			FlowId = flow.Id,

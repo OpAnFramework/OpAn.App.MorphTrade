@@ -3,7 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using OpAn.App.MorphTrade.Abstractions.Finance;
 using OpAn.App.MorphTrade.Abstractions.IngestionDomain;
+using OpAn.App.MorphTrade.Abstractions.User.Extensions;
 using OpAn.App.MorphTrade.Domain.Finance.Trader;
+using OpAn.App.MorphTrade.Domain.Flows.Extensions;
 using OpAn.App.MorphTrade.Domain.Flows.Flows;
 using OpAn.App.MorphTrade.Infrastructure.Persistence.Extension;
 using Testcontainers.PostgreSql;
@@ -37,7 +39,8 @@ public static class StaticDependencyCreator
 		var configuration = new ConfigurationBuilder()
 			.AddInMemoryCollection(new Dictionary<string, string?>
 			{
-				["ConnectionStrings:FlowManagementDbConnection"] = connectionString
+				["ConnectionStrings:FlowManagementDbConnection"] = connectionString,
+				["NoAuth"] = "true",
 			})
 			.AddJsonFile("flowsmanageroptions.json")
 			.Build();
@@ -54,7 +57,8 @@ public static class StaticDependencyCreator
 		services
 			.AddPersistenceDb(configuration)
 			// Add Flows domain
-			.AddFlowsDomain(configuration);
+			.AddFlowsDomain(configuration)
+			.EnsureUserInfo(configuration);
 
 		services.BuildServiceProvider()
 			.GetRequiredService<FlowsDbContext>()

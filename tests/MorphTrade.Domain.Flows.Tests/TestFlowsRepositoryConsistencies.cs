@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using OpAn.App.MorphTrade.Abstractions.Finance;
 using OpAn.App.MorphTrade.Abstractions.Flows;
 using OpAn.App.MorphTrade.Domain.Flows.Entities;
+using OpAn.App.MorphTrade.Domain.Flows.Extensions;
 using OpAn.App.MorphTrade.Domain.Flows.Repositories;
 using OpAn.App.MorphTrade.Domain.Flows.Tests.Fixtures;
 using OpAn.App.MorphTrade.Infrastructure.Persistence.Extension;
@@ -18,6 +19,7 @@ public class TestFlowsRepositoryConsistencies
 	private readonly IServiceProvider _globalServices;
 	private const string TestFlowName = "TestFlow";
 	private const string TestFlowId = "TestFlowId";
+	private const string TestUserId = "TestUserId";
 
 	private const string TestTickerSymbol = "TickerSymbol";
 	private const decimal TestTickerPrice = 100;
@@ -95,6 +97,7 @@ public class TestFlowsRepositoryConsistencies
 		// Create a new Flow and assert its existence
 		FlowMeta testFlowMetadata = new FlowMeta
 		{
+			UserId = TestUserId,
 			Name = TestFlowName,
 			Id = TestFlowId
 		};
