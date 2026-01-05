@@ -134,7 +134,9 @@ public class TestFlowsRepositoryConsistencies
 				Quantity = 0,
 				Volume = TestTickerVolume,
 				Timestamp = DateTime.UtcNow
-			}
+			},
+			TradeCall = TradeCall.Long,
+			TradeCallInfo = new TradeCallInfo(TradeCall.Long, 5, 2, 10)
 		};
 
 		CallResponseEvent? crEvent = await flowsRepository.CreateUpdateCallResponseEventAsync(
