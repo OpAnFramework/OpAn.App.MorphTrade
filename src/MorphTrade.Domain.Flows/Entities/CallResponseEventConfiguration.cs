@@ -31,5 +31,6 @@ public class CallResponseEventConfiguration : IEntityTypeConfiguration<CallRespo
 
 		// Trade call entity configurations.
 		builder.Property(e => e.TradeCall).HasConversion<string>();
+		builder.OwnsOne(e => e.TradeCallInfo);
 	}
 }

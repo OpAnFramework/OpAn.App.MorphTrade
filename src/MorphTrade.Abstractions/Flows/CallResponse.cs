@@ -17,7 +17,12 @@ public class CallResponse
 	/// <summary>
 	/// Signifies what kind of trade call would be handled.
 	/// </summary>
-	public TradeCall TradeCall { get; set; }
+	public required TradeCall TradeCall { get; set; }
+
+	/// <summary>
+	/// Trade call information for the trade call.
+	/// </summary>
+	public required TradeCallInfo TradeCallInfo { get; set; }
 
 	/// <summary>
 	/// The instrument that will be handled with the trade call.

@@ -102,10 +102,18 @@ public class EmaCrossoverSimpleFlow: FlowBase
 					Timestamp = executionTime,
 					Symbol = symbol!
 				};
+
+
+
 				CallResponse callResponse = new CallResponse()
 				{
 					Timestamp = GetEpochTime(executionTime),
-					TradeCall = TradeCall.Sell,
+					TradeCall = TradeCall.Short,
+					TradeCallInfo = new TradeCallInfo(
+						TradeCall.Short,
+						(decimal)currentDatapoint.Close,
+						(decimal) currentDatapoint.High + 2,
+						(decimal) currentDatapoint.Low - 2),
 					Ticker = ticker
 				};
 
@@ -146,7 +154,12 @@ public class EmaCrossoverSimpleFlow: FlowBase
 				CallResponse callResponse = new CallResponse()
 				{
 					Timestamp = GetEpochTime(executionTime),
-					TradeCall = TradeCall.Buy,
+					TradeCall = TradeCall.Long,
+					TradeCallInfo = new TradeCallInfo(
+						TradeCall.Long,
+						(decimal)currentDatapoint.Close,
+						(decimal) currentDatapoint.Low - 2,
+						(decimal) currentDatapoint.High + 2),
 					Ticker = ticker
 				};
 
@@ -270,8 +283,7 @@ public class EmaCrossoverSimpleFlow: FlowBase
 			};
 
 			bool isSymbolDataFresh = false;
-			IList<OlhcvDatapoint>? olhcvData = null;
-			olhcvData = await _dataVendor.GetOlhcvData(
+			var olhcvData = await _dataVendor.GetOlhcvData(
 				index,
 				tickerSymbol,
 				IsBacktesting ? _options.BacktestObservationTime : DateTime.UtcNow,
