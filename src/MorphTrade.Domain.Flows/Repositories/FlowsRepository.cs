@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using OpAn.App.MorphTrade.Abstractions.Finance;
 using OpAn.App.MorphTrade.Abstractions.Flows;
 using OpAn.App.MorphTrade.Domain.Flows.Entities;
 
@@ -96,6 +97,7 @@ public class FlowsRepository: IFlowsRepository
 			FlowId = flow.Id,
 			Timestamp = DateTimeOffset.FromUnixTimeSeconds(callResponse.Timestamp).UtcDateTime,
 			TradeCall = callResponse.TradeCall,
+			TradeCallInfo = (TradeCallInfoEvent) callResponse.TradeCallInfo,
 			IsBacktesting = isBacktesting
 		};
 

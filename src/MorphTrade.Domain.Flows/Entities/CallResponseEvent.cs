@@ -1,5 +1,4 @@
 using CmdScale.EntityFrameworkCore.TimescaleDB.Configuration.Hypertable;
-using Microsoft.EntityFrameworkCore;
 using OpAn.App.MorphTrade.Abstractions.Core;
 using OpAn.App.MorphTrade.Abstractions.Finance;
 
@@ -35,6 +34,11 @@ public class CallResponseEvent: AuthorizedEntity
 	/// Signifies what kind of trade call would be handled.
 	/// </summary>
 	public TradeCall TradeCall { get; set; }
+
+	/// <summary>
+	/// Provides additional information for the trade call.
+	/// </summary>
+	public TradeCallInfoEvent? TradeCallInfo { get; set; }
 
 	/// <summary>
 	/// The instrument that will be handled with the trade call.
