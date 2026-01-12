@@ -1,5 +1,6 @@
 ﻿# Project Generated Files
 artifacts/
+*/.DS_Store
 
 # Project Configuration files
 # EditorConfig is added by SKB.Core.EditorConfig
