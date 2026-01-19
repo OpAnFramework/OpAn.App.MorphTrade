@@ -1,6 +1,9 @@
 ﻿# Project Generated Files
 artifacts/
-*/.DS_Store
+**/.DS_Store
+
+# Ignore the apidoc from docfx
+apidoc/
 
 # Project Configuration files
 # EditorConfig is added by SKB.Core.EditorConfig

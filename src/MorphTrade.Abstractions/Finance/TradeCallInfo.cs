@@ -11,10 +11,10 @@ public class TradeCallInfo
 	/// <summary>
 	/// A constructor for the trade call info.
 	/// </summary>
-	/// <param name="tradeCall"></param>
-	/// <param name="entry"></param>
-	/// <param name="stopLoss"></param>
-	/// <param name="takeProfit"></param>
+	/// <param name="tradeCall">Trade call.</param>
+	/// <param name="entry">Entry point.</param>
+	/// <param name="stopLoss">Exit point to stop loss.</param>
+	/// <param name="takeProfit">Exit point to take profit.</param>
 	public TradeCallInfo(
 		TradeCall tradeCall,
 		decimal? entry,

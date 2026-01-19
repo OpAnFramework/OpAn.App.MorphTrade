@@ -1,3 +1,4 @@
+using OpAn.App.MorphTrade.Abstractions.Finance;
 using OpAn.App.MorphTrade.Abstractions.Flows;
 using OpAn.App.MorphTrade.Domain.Flows.Entities;
 
@@ -69,6 +70,23 @@ public interface IFlowsRepository
 		FlowMeta flow,
 		CallResponse callResponse,
 		bool isBacktesting = false);
+
+	/// <summary>
+	/// Gets a call response event by the ID.
+	/// </summary>
+	/// <param name="id">ID to be tracked.</param>
+	/// <returns>The found call response.</returns>
+	public Task<CallResponseEvent?> GetCallResponseEventByIdAsync(string id);
+
+	/// <summary>
+	/// Finds the call response depending on the ticker information assigned with the flow.
+	/// </summary>
+	/// <param name="flow">Flow to be checked for.</param>
+	/// <param name="ticker">Ticker information to be tracked.</param>
+	/// <returns></returns>
+	public Task<CallResponseEvent?> GetCallResponseEventByTickerInfoAsync(
+		FlowMeta flow,
+		Ticker ticker);
 
 	/// <summary>
 	/// Provides all Call response events.

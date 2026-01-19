@@ -113,25 +113,62 @@ public class FlowsRepository: IFlowsRepository
 	}
 
 	/// <inheritdoc />
-	public async Task<CallResponseEvent?> CreateUpdateCallResponseEventAsync(FlowMeta flow, CallResponse callResponse, bool isBacktesting = false)
+	public async Task<CallResponseEvent?> CreateUpdateCallResponseEventAsync(
+		FlowMeta flow,
+		CallResponse callResponse,
+		bool isBacktesting = false)
 	{
 		_logger.LogDebug("Updating the call response for {FlowId}", flow.Id);
 		CallResponseEvent? responseEvent = await _flowsDbContext
 			.CallResponseEvents
 			.FirstOrDefaultAsync(response =>
 				response.FlowId == flow.Id
-				&& response.Timestamp
-					== DateTimeOffset.FromUnixTimeSeconds(callResponse.Timestamp).UtcDateTime
 				&& response.IsBacktesting == isBacktesting
 				&& response.TradeCall == callResponse.TradeCall
 				&& response.Ticker.Symbol == callResponse.Ticker.Symbol);
 
-		// TODO: Update CallResponseEvent logic
 		if (responseEvent is null)
 		{
 			return await AddCallResponseAsync(flow, callResponse, isBacktesting);
 		}
+
+		// Change timestamp always
+		//		Timestamp is changed by the hypertable automatically.
+
+		// Check if trade call is different
+		if (!Equals(callResponse.TradeCall, responseEvent.TradeCall))
+		{
+			responseEvent.TradeCall = callResponse.TradeCall;
+		}
+
+		// Check if trade call info is different
+		TradeCallInfo proposedTradeCallInfo = callResponse.TradeCallInfo;
+		TradeCallInfo retrievedTradeCallInfo = responseEvent.TradeCallInfo!;
+
+		if (!Equals(proposedTradeCallInfo, retrievedTradeCallInfo))
+		{
+			responseEvent.TradeCallInfo = (TradeCallInfoEvent?)proposedTradeCallInfo;
+		}
+
+		await _flowsDbContext.SaveChangesAsync();
+
 		return responseEvent;
+	}
+
+	/// <inheritdoc />
+	public async Task<CallResponseEvent?> GetCallResponseEventByIdAsync(string id)
+	{
+		_logger.LogDebug("Retrieving call response with ID: {ID}", id);
+		return await _flowsDbContext.CallResponseEvents.FirstOrDefaultAsync(f => f.Id == id);
+	}
+
+	/// <inheritdoc />
+	public async Task<CallResponseEvent?> GetCallResponseEventByTickerInfoAsync(FlowMeta flow, Ticker ticker)
+	{
+		_logger.LogDebug("Retrieving the last CallResponseEvent for {TICKER} over {FLOW}", ticker, flow.Name);
+		return await _flowsDbContext.CallResponseEvents.FirstOrDefaultAsync(e =>
+			e.FlowId == flow.Id
+			&& e.Ticker.Symbol == ticker.Symbol);
 	}
 
 	/// <inheritdoc />

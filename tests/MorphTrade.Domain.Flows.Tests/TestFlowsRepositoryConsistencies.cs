@@ -148,6 +148,60 @@ public class TestFlowsRepositoryConsistencies
 	}
 
 	/// <summary>
+	/// Checks if the call response events can be retraced and modified.
+	/// </summary>
+	[TestMethod]
+	public async Task Test_IfCallResponseEventsCanBeRetracedAndModified()
+	{
+		// Adds and asserts a previously added CallResponseEvent.
+		await Test_IfCallResponseEventsCanBeAdded();
+
+		// Add the service scope and get the injected repository.
+		var serviceContainer = CreateDependencies().BuildServiceProvider();
+		IFlowsRepository flowsRepository = serviceContainer.GetRequiredService<IFlowsRepository>();
+
+		// Retrieval test
+		FlowMeta? registeredFlow = await flowsRepository.GetFlowByIdAsync(TestFlowId);
+		Ticker testTicker = new Ticker
+		{
+			Symbol = TestTickerSymbol,
+			Price = TestTickerPrice,
+			Quantity = 0,
+			Volume = TestTickerVolume,
+			Timestamp = DateTime.UtcNow
+		};
+
+		CallResponseEvent? crEvent = await flowsRepository.GetCallResponseEventByTickerInfoAsync(registeredFlow!, testTicker);
+		Assert.IsNotNull(crEvent);
+
+		// Modify the call response event
+		CallResponse callResponse = crEvent;
+
+		// Make modifications assuming long position
+		TradeCallInfo newTradeCallInfo = new TradeCallInfo(
+				callResponse.TradeCallInfo.TradeCall,
+				callResponse.TradeCallInfo.Entry! + 5,
+				callResponse.TradeCallInfo.Entry! * (decimal?)0.08,		// Set stop loss at -2%
+				callResponse.TradeCallInfo.Entry! * (decimal?)1.08		// Set take profit at +8%
+			);
+
+		callResponse.TradeCallInfo = newTradeCallInfo;
+
+		CallResponseEvent? creationCallResponseEvent = await flowsRepository.CreateUpdateCallResponseEventAsync(
+			registeredFlow!,
+			callResponse);
+		Assert.IsNotNull(creationCallResponseEvent);
+
+		// Retrieve the modified event
+		CallResponseEvent? modifiedCallResponseEvent = await flowsRepository.GetCallResponseEventByIdAsync(
+			creationCallResponseEvent.Id);
+		Assert.IsNotNull(modifiedCallResponseEvent);
+		Assert.AreEqual(
+			modifiedCallResponseEvent.TradeCallInfo!.StopLoss,
+			newTradeCallInfo.StopLoss);
+	}
+
+	/// <summary>
 	/// Cleans up the database.
 	/// </summary>
 	[TestCleanup]
