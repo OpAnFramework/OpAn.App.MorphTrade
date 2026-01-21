@@ -11,22 +11,22 @@ public class TradeCallInfo
 	/// <summary>
 	/// A constructor for the trade call info.
 	/// </summary>
-	/// <param name="tradeCall"></param>
-	/// <param name="entry"></param>
-	/// <param name="stopLoss"></param>
-	/// <param name="takeProfit"></param>
+	/// <param name="tradeCall">Trade call.</param>
+	/// <param name="entry">Entry point.</param>
+	/// <param name="stopLoss">Exit point to stop loss.</param>
+	/// <param name="targetPrice">Exit point to target price.</param>
 	public TradeCallInfo(
 		TradeCall tradeCall,
 		decimal? entry,
 		decimal? stopLoss,
-		decimal? takeProfit)
+		decimal? targetPrice)
 	{
 		TradeCall = tradeCall;
-		if (IsAValidCall(tradeCall, entry, stopLoss, takeProfit))
+		if (IsAValidCall(tradeCall, entry, stopLoss, targetPrice))
 		{
 			Entry = entry;
 			StopLoss = stopLoss;
-			TakeProfit = takeProfit;
+			TargetPrice = targetPrice;
 		}
 	}
 
@@ -69,7 +69,7 @@ public class TradeCallInfo
 			TradeCall = tradeCallInfo.TradeCall,
 			Entry = tradeCallInfo.Entry,
 			StopLoss = tradeCallInfo.StopLoss,
-			TakeProfit = tradeCallInfo.TakeProfit
+			TargetPrice = tradeCallInfo.TargetPrice
 		};
 	}
 
@@ -91,5 +91,5 @@ public class TradeCallInfo
 	/// <summary>
 	/// A profitable exit value of the trade call. (for Long and Short positions.)
 	/// </summary>
-	public decimal? TakeProfit {get; init;}
+	public decimal? TargetPrice {get; init;}
 }

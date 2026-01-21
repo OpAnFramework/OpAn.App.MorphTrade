@@ -4,13 +4,13 @@
     {
       "src": [
         {
-          "src": "../src",
+          "src": "src",
           "files": [
             "**/*.csproj"
           ]
         }
       ],
-      "dest": "api"
+      "dest": "apidoc"
     }
   ],
   "build": {

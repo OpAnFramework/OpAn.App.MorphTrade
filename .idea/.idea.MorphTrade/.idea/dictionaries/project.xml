@@ -2,6 +2,7 @@
   <dictionary name="project">
     <words>
       <w>aapl</w>
+      <w>apidoc</w>
       <w>appsettings</w>
       <w>datapoints</w>
       <w>flowsmanageroptions</w>
