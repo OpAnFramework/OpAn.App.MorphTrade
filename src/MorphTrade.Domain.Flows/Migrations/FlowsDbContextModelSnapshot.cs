@@ -127,7 +127,7 @@ namespace OpAn.App.MorphTrade.Domain.Flows.Migrations
                                 .HasForeignKey("CallResponseEventId", "CallResponseEventTimestamp");
                         });
 
-                    b.OwnsOne("OpAn.App.MorphTrade.Domain.Flows.Entities.TradeCallInfoEvent", "TradeCallInfo", b1 =>
+                    b.OwnsOne("OpAn.App.MorphTrade.Abstractions.Finance.TradeCallInfoEvent", "TradeCallInfo", b1 =>
                         {
                             b1.Property<string>("CallResponseEventId")
                                 .HasColumnType("text");
@@ -141,7 +141,7 @@ namespace OpAn.App.MorphTrade.Domain.Flows.Migrations
                             b1.Property<decimal?>("StopLoss")
                                 .HasColumnType("numeric");
 
-                            b1.Property<decimal?>("TakeProfit")
+                            b1.Property<decimal?>("TargetPrice")
                                 .HasColumnType("numeric");
 
                             b1.Property<int>("TradeCall")

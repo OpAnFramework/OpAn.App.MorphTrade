@@ -26,7 +26,7 @@ public class TradeCallInfoEvent
 	/// <summary>
 	/// A profitable exit value of the trade call. (for Long and Short positions.)
 	/// </summary>
-	public decimal? TakeProfit {get; set;}
+	public decimal? TargetPrice {get; set;}
 
 	/// <summary>
 	/// An implicit operator that allows conversion of entities from
@@ -40,7 +40,7 @@ public class TradeCallInfoEvent
 				tradeCallInfoEvent.TradeCall,
 				tradeCallInfoEvent.Entry,
 				tradeCallInfoEvent.StopLoss,
-				tradeCallInfoEvent.TakeProfit
+				tradeCallInfoEvent.TargetPrice
 			);
 	}
 }
